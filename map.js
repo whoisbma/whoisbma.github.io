@@ -16,12 +16,19 @@ function Map() {
 	this.savedPosX = [];
 	this.savedPosY = [];
 
+	this.oldSavedPosX = [];
+	this.oldSavedPosY = [];
+
 	this.buildMap = function() {
 		console.log("building level " + whichLevel);
 		this.totalDots = 9999;
 		player.dir = 0;
 		this.saving = false;
 
+		this.oldSavedPosX = [];
+		this.oldSavedPosY = [];
+		arrayCopy(this.savedPosX,this.oldSavedPosX);
+		arrayCopy(this.savedPosY,this.oldSavedPosY);
 		// while(this.totalDots < whichLevel * 10 && this.totalDots > whichLevel * 20) {
 		while(this.totalDots > whichLevel * 100) {
 			var i, j;
@@ -262,6 +269,10 @@ function Map() {
 					fill(200);
 					rect(i*MULT + MULT/2 - 1, j*MULT + MULT/2 - 1, 3, 3);
 				}
+				if (this.dot[i][j] === 2) {
+					fill(50);
+					rect(i*MULT + MULT/2 - 1, j*MULT + MULT/2 - 1, 3, 3);
+				}
 				if (this.power[i][j] === 1) {
 					push();
 					rectMode(CENTER);
@@ -287,16 +298,18 @@ function Map() {
 				if (this.power[floor(player.x)][floor(player.y)] === 1) {
 					this.power[floor(player.x)][floor(player.y)] = 0;
 					this.saving = true;
-					console.log("saving is true!");
+					// console.log("saving is true!");
 				}
 			} else {
 				if (this.power[floor(player.x)][floor(player.y)] === 1) {
 					this.power[floor(player.x)][floor(player.y)] = 0;
-					this.saving = false;
-					console.log("saving is false!");
+					// this.saving = false;
+					// console.log("saving is false!");
 					whichLevel++;
 					if (this.numEnemies > 2) {
 						this.numEnemies-=2;
+					} else if (this.numEnemies > 1) {
+						this.numEnemies-=1;
 					}
 					this.getNewLevel();
 				}
@@ -304,12 +317,12 @@ function Map() {
 			
 		}
 
-		if (this.savedPosX[0] !== undefined) {
-			for (i = 0; i < this.savedPosX.length; i++) {
+		if (this.oldSavedPosX[0] !== undefined) {
+			for (i = 0; i < this.oldSavedPosX.length; i++) {
 				fill(250,0,250,50);
-				rect(this.savedPosX[i]*MULT,this.savedPosY[i]*MULT,MULT,MULT);
+				rect(this.oldSavedPosX[i]*MULT,this.oldSavedPosY[i]*MULT,MULT,MULT);
 			}
-			console.log("i have saved positions!");
+			// console.log("i have saved positions!");
 		}
 	};
 

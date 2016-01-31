@@ -3,7 +3,7 @@ function Player() {
 	this.y = floor(random(((HEIGHT)/MULT) - 6)) + 3.5;
 	this.dir = 0; //1 up 2 right 3 down 4 left
 	this.nextDir = 0;
-	this.speed = 0.1;
+	this.speed = 0.075;
 
 	this.sizeMod = 0;
 	this.path = [];
@@ -174,46 +174,53 @@ function Player() {
 	};
 
 	this.checkHasDot = function(xx,yy) {
-		if (level.dot[xx][yy] === 1) {
-			level.dot[xx][yy] = 0;
-			level.currentDots--;
+		if (level.dot[xx][yy] != 0) {
 			tick = true;
-			this.sizeMod += 10;
+			if (level.dot[xx][yy] === 2) {
+				level.dot[xx][yy] = 0;
+			}
+			if (level.dot[xx][yy] === 1) {
+				level.dot[xx][yy] = 0;
+				level.currentDots--;
+			
+				this.sizeMod += 10;
 
-			var alreadyContainedX = false;
-			var alreadyContainedY = false;
-			if (level.saving) {
-				// for (i = 0; i < level.savedPosX.length; i++) {
-				// 	if (level.savedPosX[0] !== undefined) {
-				// 		if (level.savedPosX[i] === floor(this.x)) {
-				// 			alreadyContainedX = true;
-				// 		}
-				// 		if (level.savedPosY[i] === floor(this.y)) {
-				// 			alreadyContainedY = true;
-				// 		}
-				// 	}
-				// }
-				// if (!alreadyContainedX && !alreadyContainedY) {
+				var alreadyContainedX = false;
+				var alreadyContainedY = false;
+				if (level.saving) {
+					// for (i = 0; i < level.savedPosX.length; i++) {
+					// 	if (level.savedPosX[0] !== undefined) {
+					// 		if (level.savedPosX[i] === floor(this.x)) {
+					// 			alreadyContainedX = true;
+					// 		}
+					// 		if (level.savedPosY[i] === floor(this.y)) {
+					// 			alreadyContainedY = true;
+					// 		}
+					// 	}
+					// }
+					// if (!alreadyContainedX && !alreadyContainedY) {
 					level.savedPosX.push(floor(player.x));
 					level.savedPosY.push(floor(player.y));
-					console.log("there are now " + level.savedPosX.length + " saved positions");
+					// console.log("there are now " + level.savedPosX.length + " saved positions");
 				// }
-			}
+				}
 
-			if (level.currentDots === 0) {
-				whichLevel++;
-				level.getNewLevel();
+				if (level.currentDots === 0) {
+					whichLevel++;
+					level.getNewLevel();
+				}
 			}
 		}
+		
 	};
 
 
 	this.kill = function() {
 		this.x = floor(random(((WIDTH)/MULT) - 6)) + 3.5;
 		this.y = floor(random(((HEIGHT)/MULT) - 6)) + 3.5;
-		if (whichLevel > 1) {
-			whichLevel--;
-		} 
+		// if (whichLevel > 1) {
+		whichLevel = 1;
+		// }
 		level.savedPosX = [];
 		level.savedPosY = [];
 		level.getNewLevel();
