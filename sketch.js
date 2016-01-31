@@ -1,8 +1,10 @@
 var level;
 var player;
-var WIDTH = 1200;
+var WIDTH = 1000;
 var HEIGHT = 600;
-var MULT = 30;
+var MULT = 25;
+var whichLevel = 1;
+var tick = false;
 
 function setup() {
 	createCanvas(WIDTH, HEIGHT);
@@ -15,9 +17,10 @@ function setup() {
 
 function draw() {
 	background(5);
-	level.display();
 	player.move();
+	level.display();
 	player.display();
+	tick = false;
 
 }
 
