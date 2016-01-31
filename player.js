@@ -18,7 +18,7 @@ function Player() {
 		rect((floor(this.x) * MULT)-this.sizeMod, (floor(this.y) * MULT)-this.sizeMod, MULT+this.sizeMod*2, MULT+this.sizeMod*2);
 		fill(220,220,100);
 		rect(floor(this.x) * (MULT), floor(this.y) * (MULT), MULT, MULT);
-		rect((this.x) * (MULT), (this.y) * (MULT), MULT, MULT);
+		// rect((this.x) * (MULT), (this.y) * (MULT), MULT, MULT);
 	};
 
 	this.spaceEmpty = function(d) {
