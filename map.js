@@ -183,8 +183,8 @@ function Map() {
 		for (var i = 0; i < this.MAPW; i++) {
 			for (var j = 0; j < this.MAPH; j++) {
 				if (this.map[i][j] === 1) {
-					var c = min(map(dist(player.x, player.y, i, j),0, 5, 0, 150),150);
-					fill(255- c + random(15));
+					var c = map(dist(player.x, player.y, i, j), 0, max(player.sizeMod/3,3), 0, 255);//min(map(dist(player.x, player.y, i, j), 0, player.sizeMod/2, 0, 255),255);
+					fill(240 - c + random(15));
 					noStroke();
 					this.drawTile(i,j);
 				}

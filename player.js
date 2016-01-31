@@ -12,17 +12,16 @@ function Player() {
 		if (this.sizeMod > 1 && frameCount % 10 === 0) {
 			this.sizeMod -= 8;
 		}
-
 		fill(255,50);
 		// ellipse((this.x) * MULT,(this.y) * MULT, MULT+this.sizeMod, MULT+this.sizeMod);
 		rect((floor(this.x) * MULT)-this.sizeMod, (floor(this.y) * MULT)-this.sizeMod, MULT+this.sizeMod*2, MULT+this.sizeMod*2);
 		fill(220,220,100);
-		rect(floor(this.x) * (MULT), floor(this.y) * (MULT), MULT, MULT);
-		// rect((this.x) * (MULT), (this.y) * (MULT), MULT, MULT);
+		rect((this.x - 0.5) * (MULT), (this.y - 0.5) * (MULT), MULT, MULT);
+		rect((this.x - 0.5) * (MULT), (this.y - 0.5) * (MULT), MULT, MULT);
 	};
 
 	this.spaceEmpty = function(d) {
-		var skipSpace = 0.15;
+		var skipSpace = 0.2;
 		if (d === 1) {	//up
 			return (level.map[floor(this.x)][floor(this.y-this.speed-0.5)] === 0 &&
 					level.map[floor(this.x-skipSpace)][floor(this.y-this.speed-0.5)] === 0 &&
@@ -65,6 +64,11 @@ function Player() {
 		} else {
 			return false;
 		}
+	};
+
+	this.alignedToGrid = function() {
+		//bla bla bla
+		return false;
 	};
 
 	this.getInput = function() {
@@ -126,7 +130,6 @@ function Player() {
 				this.nextDir = 0;
 			}
 		}
-
 
 
 		if (this.dir === 1) {
