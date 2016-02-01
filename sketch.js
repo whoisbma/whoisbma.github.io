@@ -1,7 +1,7 @@
 var level;
 var player;
 var WIDTH = 1000;
-var HEIGHT = 700;
+var HEIGHT = 600;
 var MULT = 25;
 var whichLevel = 1;
 var tick = false;
