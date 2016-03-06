@@ -92,7 +92,21 @@
 			vec2 brickTile(vec2 _st, float _zoom) {
 				_st *= _zoom;
 				//offset
-				_st.x += step(1.0, mod(_st.y, 2.0)) * 0.5;
+				// _st.x += step(1.0, mod(_st.y, 2.0)) * 0.5;
+				float t = time * 0.1;
+				if( fract(t)>0.5 ){
+        			if (fract( _st.y * 0.5) > 0.5){
+            			_st.x += fract(t)*2.0;
+        			} else {
+            			_st.x -= fract(t)*2.0;
+        			} 
+    			} else {
+        			if (fract( _st.x * 0.5) > 0.5){
+            			_st.y += fract(t)*2.0;
+        			} else {
+            			_st.y -= fract(t)*2.0;
+        			} 
+    			}
 				return fract(_st);
 			}
 
@@ -101,11 +115,11 @@
 				st.x *= resolution.x/resolution.y;
 				vec3 color = vec3(0.0);
 
-				st = tile(st, 30.0);
+				// st = tile(st, 30.0);
 				vec2 st2 = st;
 
-				// st = brickTile(st, 10.0);
-				// st2 = brickTile(st2, 20.0);
+				st = brickTile(st, 30.0);
+				st2 = brickTile(st2, 30.0);
 
 				st = rotate2D(st, PI*0.2*time);
 				st2 = rotate2D(st2, -PI*0.5*time);
@@ -174,10 +188,10 @@
 				renderer.setPixelRatio( window.devicePixelRatio );
 				container.appendChild( renderer.domElement );
 
-				stats = new Stats();
-				stats.domElement.style.position = 'absolute';
-				stats.domElement.style.top = '0px';
-				container.appendChild( stats.domElement );
+				// stats = new Stats();
+				// stats.domElement.style.position = 'absolute';
+				// stats.domElement.style.top = '0px';
+				// container.appendChild( stats.domElement );
 
 				onWindowResize();
 
@@ -201,7 +215,7 @@
 				requestAnimationFrame( animate );
 
 				render();
-				stats.update();
+				// stats.update();
 
 			}
 
