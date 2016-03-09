@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - shader [Monjori]</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				color: #ffffff;
+				font-family:sans-serif;
+				font-size:12px;
+				text-align:right;
+				font-weight:bold;
+
+				background-color: #000000;
+				margin: 0;
+				overflow: hidden;
+			}
+
+			#info {
+				position: absolute;
+				top: 0px; width: 95%;
+				padding: 5px;
+			}
+
+			a {
+				color: #ffffff;
+			}
+
+			#oldie a { color:#da0 }
+		</style>
+	</head>
+	<body>
+
+		<div id="container"></div>
+		<!-- <div id="info">three.js shader testing, ripped off by Bryan Ma</a></div> -->
+
+		<script src="js/three.min.js"></script>
+		<script src="js/Detector.js"></script>
+		<script src="js/stats.min.js"></script>
+
+		<script id="vertexShader" type="x-shader/x-vertex">
+
+			void main()	{
+
+				gl_Position = vec4( position, 1.0 );
+
+			}
+
+		</script>
+
+		<script id="fragmentShader" type="x-shader/x-fragment">
+	
+			#define TAU 6.28318530718
+			#define MAX_ITER 200
+
+			uniform vec2 resolution;
+			uniform float time;
+
+			void main()	{
+
+				float time2 = time * 0.007 + 23.0;
+				vec2 uv = gl_FragCoord.xy / resolution.xy;
+				// uv.x *= resolution.x/resolution.y;
+
+				#ifdef SHOW_TILING
+					vec2 p = mod(uv*TAU*2.0, TAU)-250.0;
+				#else
+    				vec2 p = mod(uv*TAU, TAU)-250.0;
+				#endif
+
+				vec2 i = vec2(p);
+				float c = 1.0;
+				float inten = .003;
+
+				for (int n = 0; n < MAX_ITER; n+=10) 
+				{
+					float t = time2 * (1.0 - (3.1 / float(n+1)));
+					// t = time2 * n;
+					i = p + vec2(cos(t - i.x) + sin(t + i.y), sin(t - i.y) + cos(t + i.x));
+					c += 1.0/length(vec2(p.x / (sin(i.x+t)/inten), p.y / (cos(i.y+t)/inten)));
+				}
+
+				c /= float(MAX_ITER/10);
+				c = 1.17-pow(c, 1.5);
+				vec3 color = vec3(pow(abs(c), 4.0));
+ 				color = clamp(color + vec3(0.0, 0.3, 0.55), 0.29, 1.0);
+ 				// color = vec3(c);
+
+ 				#ifdef SHOW_TILING
+					// Flash tile borders...
+					vec2 pixel = 2.0 / resolution.xy;
+					uv *= 2.0;
+
+					float f = floor(mod(time*.5, 2.0)); 	// Flash value.
+					vec2 first = step(pixel, uv) * f;		   	// Rule out first screen pixels and flash.
+					uv  = step(fract(uv), pixel);				// Add one line of pixels per tile.
+					color = mix(color, vec3(1.0, 1.0, 0.0), (uv.x + uv.y) * first.x * first.y); // Yellow line
+	
+				#endif
+			
+				gl_FragColor = vec4(color, 1.0);
+
+			}
+
+		</script>
+
+		<script>
+
+			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+			var container, stats;
+
+			var camera, scene, renderer;
+
+			var uniforms;
+
+			init();
+			animate();
+
+			function init() {
+
+				container = document.getElementById( 'container' );
+
+				camera = new THREE.Camera();
+				camera.position.z = 1;
+
+				scene = new THREE.Scene();
+
+				var geometry = new THREE.PlaneBufferGeometry( 2, 2 );
+
+				uniforms = {
+					time: { type: "f", value: 1.0 },
+					resolution: { type: "v2", value: new THREE.Vector2() }
+				};
+
+				var material = new THREE.ShaderMaterial( {
+
+					uniforms: uniforms,
+					vertexShader: document.getElementById( 'vertexShader' ).textContent,
+					fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+
+				} );
+
+				var mesh = new THREE.Mesh( geometry, material );
+				scene.add( mesh );
+
+				renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				container.appendChild( renderer.domElement );
+
+				// stats = new Stats();
+				// stats.domElement.style.position = 'absolute';
+				// stats.domElement.style.top = '0px';
+				// container.appendChild( stats.domElement );
+
+				onWindowResize();
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function onWindowResize( event ) {
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+				uniforms.resolution.value.x = renderer.domElement.width;
+				uniforms.resolution.value.y = renderer.domElement.height;
+
+			}
+
+			//
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				render();
+				// stats.update();
+
+			}
+
+			function render() {
+
+				uniforms.time.value += 0.05;
+
+				renderer.render( scene, camera );
+
+			}
+
+		</script>
+
+	</body>
+</html>
