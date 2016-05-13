@@ -135,6 +135,10 @@
 
 			var posOffsetIncr = 1.0;
 
+			var whichIncr = -1;
+			var whichZoom = -1;
+			var whichRes = -1;
+
 			init();
 			animate();
 
@@ -194,19 +198,14 @@
 			}
 
 			function onWindowResize( event ) {
-
 				renderer.setSize( window.innerWidth, window.innerHeight );
-
 				uniforms.resolution.value.x = renderer.domElement.width;
 				uniforms.resolution.value.y = renderer.domElement.height;
-
 			}
 
 			function onDocumentMouseMove(event) {
-
 				uniforms.mouse.value.x =  ( event.clientX );
 				uniforms.mouse.value.y =  ( event.clientY );
-
 			}
 
 			function onKeyDown(event) {
@@ -220,18 +219,22 @@
 						//if zoomed far out, choose either to move in one direction only or in both
 						// might need to prevent far translation if a big zoom out.
 						var distanceRange = Math.floor(Math.random() * 6);
+						whichZoom = Math.floor(Math.random() * 4);
+						whichRes = Math.floor(Math.random() * 4);
+						whichIncr = distanceRange;
+						console.log(whichIncr);
 						switch (distanceRange) {
 							case 0: // zoom in, use finalOffset to animate	
 								console.log("zoom in 4x");
-								uniforms.posOffset.value.x = Math.random() * 200000 - 100000;
-								uniforms.posOffset.value.y = Math.random() * 200000 - 100000;;
+								uniforms.posOffset.value.x = Math.random() * 300000 - 150000;
+								uniforms.posOffset.value.y = Math.random() * 300000 - 150000;;
 								uniforms.zoom.value = Math.random() * (0.000001 - 0.0000001) + 0.0000001;
 								uniforms.pixelSize.value = Math.random() * (window.innerWidth - 100) + 100;
 								break;						
 							case 1:
 								console.log("zoom in 3x");
-								uniforms.posOffset.value.x = Math.random() * 200000 - 100000;
-								uniforms.posOffset.value.y = Math.random() * 200000 - 100000;;
+								uniforms.posOffset.value.x = Math.random() * 300000 - 150000;
+								uniforms.posOffset.value.y = Math.random() * 300000 - 150000;;
 								uniforms.zoom.value = Math.random() * (0.00001 - 0.000001) + 0.000001;
 								uniforms.pixelSize.value = Math.random() * (window.innerWidth - 100) + 100;
 								break;
@@ -246,13 +249,13 @@
 								console.log("zoom out, x axis");
 								uniforms.posOffset.value.x = Math.random() * 500000000 - 250000000;
 								uniforms.zoom.value = Math.random() * (1 - 0.000001) + 0.000001;
-								// uniforms.pixelSize.value = Math.random() * (window.innerWidth - 100) + 100;
+								uniforms.pixelSize.value = Math.random() * (window.innerWidth - 500) + 500;
 								break;
 							case 4: // zoom out, y axis
 								console.log("zoom out, y axis");
 								uniforms.posOffset.value.y = Math.random() * 20000000 - 10000000;
 								uniforms.zoom.value = Math.random() * (1 - 0.000001) + 0.000001;
-								// uniforms.pixelSize.value = Math.random() * (window.innerWidth - 100) + 100;
+								uniforms.pixelSize.value = Math.random() * (window.innerWidth - 500) + 500;
 								break;
 							case 5: // zoom out, x and y axis
 								console.log("zoom out, both axes");
@@ -394,7 +397,57 @@
 			function render() {
 
 				uniforms.time.value += 0.05;
-				uniforms.finalOffset.value.x += 0.00000001;
+				switch (whichIncr) {
+					case 0:
+						uniforms.finalOffset.value.x += 0.00000001;
+						break;
+					case 1:
+						uniforms.finalOffset.value.x += 0.00000001;
+						break;
+					case 2:
+						uniforms.finalOffset.value.x += 0.00000001;
+						break;
+					case 3:
+						uniforms.posOffset.value.y += 0.05;
+						break;
+					case 4:
+						uniforms.posOffset.value.y += 0.05;
+						break;
+					case 5:
+						uniforms.posOffset.value.y += 0.05;
+						break;
+					default:
+						break;
+				}
+				switch (whichZoom) {
+					case 0:
+						break;
+					case 1:
+						break;
+					case 2:
+						uniforms.zoom.value /= 1.0000000001;
+						break;
+					case 3:
+						uniforms.zoom.value *= 1.0000000001;
+						break;
+					default:
+						break;
+				}
+				switch (whichRes) {
+					case 0:
+						break;
+					case 1:
+						break;
+					case 2:
+						uniforms.pixelSize.value -= 0.1;
+						break;
+					case 3:
+						uniforms.pixelSize.value += 0.1;
+						break;
+					default:
+						break;
+				}
+				
 				// uniforms.pixelSize.value += 0.1;
 				renderer.render( scene, camera );
 
