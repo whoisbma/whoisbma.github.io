@@ -394,7 +394,8 @@
 			function render() {
 
 				uniforms.time.value += 0.05;
-
+				uniforms.finalOffset.value.x += 0.00000001;
+				// uniforms.pixelSize.value += 0.1;
 				renderer.render( scene, camera );
 
 			}
