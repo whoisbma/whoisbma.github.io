@@ -142,6 +142,7 @@
 			init();
 			animate();
 
+
 			function init() {
 
 				container = document.getElementById( 'container' );
@@ -194,7 +195,8 @@
 				window.addEventListener( 'keyup', onKeyUp, false);
 				window.addEventListener( 'keydown', onKeyDown, false);
 				// capture();
-
+				setInterval(getNewSettings, 30000);
+				getNewSettings();
 			}
 
 			function onWindowResize( event ) {
@@ -208,70 +210,71 @@
 				uniforms.mouse.value.y =  ( event.clientY );
 			}
 
+			function getNewSettings() {
+				//first set zoomed in or far out
+				//change time adjustment method based on this
+				//if zoomed far out, choose either to move in one direction only or in both
+				// might need to prevent far translation if a big zoom out.
+				var distanceRange = Math.floor(Math.random() * 6);
+				whichZoom = Math.floor(Math.random() * 4);
+				whichRes = Math.floor(Math.random() * 4);
+				whichIncr = distanceRange;
+				console.log(whichIncr);
+				switch (distanceRange) {
+					case 0: // zoom in, use finalOffset to animate	
+						console.log("zoom in 4x");
+						uniforms.posOffset.value.x = Math.random() * 300000 - 150000;
+						uniforms.posOffset.value.y = Math.random() * 300000 - 150000;;
+						uniforms.zoom.value = Math.random() * (0.000001 - 0.0000001) + 0.0000001;
+						uniforms.pixelSize.value = Math.random() * (window.innerWidth - 100) + 100;
+						break;						
+					case 1:
+						console.log("zoom in 3x");
+						uniforms.posOffset.value.x = Math.random() * 300000 - 150000;
+						uniforms.posOffset.value.y = Math.random() * 300000 - 150000;;
+						uniforms.zoom.value = Math.random() * (0.00001 - 0.000001) + 0.000001;
+						uniforms.pixelSize.value = Math.random() * (window.innerWidth - 100) + 100;
+						break;
+					case 2:
+						console.log("zoom in 2x");
+						uniforms.posOffset.value.x = Math.random() * 200000 - 100000;
+						uniforms.posOffset.value.y = Math.random() * 200000 - 100000;;
+						uniforms.zoom.value = Math.random() * (0.0001 - 0.00001) + 0.00001;
+						uniforms.pixelSize.value = Math.random() * (window.innerWidth - 100) + 100;
+						break;
+					case 3: // zoom out, x axis
+						console.log("zoom out, x axis");
+						uniforms.posOffset.value.x = Math.random() * 500000000 - 250000000;
+						uniforms.zoom.value = Math.random() * (1 - 0.000001) + 0.000001;
+						uniforms.pixelSize.value = Math.random() * (window.innerWidth - 500) + 500;
+						break;
+					case 4: // zoom out, y axis
+						console.log("zoom out, y axis");
+						uniforms.posOffset.value.y = Math.random() * 20000000 - 10000000;
+						uniforms.zoom.value = Math.random() * (1 - 0.000001) + 0.000001;
+						uniforms.pixelSize.value = Math.random() * (window.innerWidth - 500) + 500;
+						break;
+					case 5: // zoom out, x and y axis
+						console.log("zoom out, both axes");
+						uniforms.posOffset.value.x = Math.random() * 100000 - 50000;
+						uniforms.posOffset.value.y = Math.random() * 100000 - 50000;
+						// uniforms.zoom.value = Math.random() * (60000 - 0.000001) + 0.000001;
+						// uniforms.pixelSize.value = Math.random() * (window.innerWidth - 100) + 100;
+						break;
+					// case 6: // zoom to "galaxy" distance, don't translate
+						// break;
+					default:
+						console.log('not supposed to see this');
+						break;
+				}
+			}
+
 			function onKeyDown(event) {
 				switch (event.which) {
 
 					// ==================================    RANDOMIZE   ============================
 					case 32: // space
-
-						//first set zoomed in or far out
-						//change time adjustment method based on this
-						//if zoomed far out, choose either to move in one direction only or in both
-						// might need to prevent far translation if a big zoom out.
-						var distanceRange = Math.floor(Math.random() * 6);
-						whichZoom = Math.floor(Math.random() * 4);
-						whichRes = Math.floor(Math.random() * 4);
-						whichIncr = distanceRange;
-						console.log(whichIncr);
-						switch (distanceRange) {
-							case 0: // zoom in, use finalOffset to animate	
-								console.log("zoom in 4x");
-								uniforms.posOffset.value.x = Math.random() * 300000 - 150000;
-								uniforms.posOffset.value.y = Math.random() * 300000 - 150000;;
-								uniforms.zoom.value = Math.random() * (0.000001 - 0.0000001) + 0.0000001;
-								uniforms.pixelSize.value = Math.random() * (window.innerWidth - 100) + 100;
-								break;						
-							case 1:
-								console.log("zoom in 3x");
-								uniforms.posOffset.value.x = Math.random() * 300000 - 150000;
-								uniforms.posOffset.value.y = Math.random() * 300000 - 150000;;
-								uniforms.zoom.value = Math.random() * (0.00001 - 0.000001) + 0.000001;
-								uniforms.pixelSize.value = Math.random() * (window.innerWidth - 100) + 100;
-								break;
-							case 2:
-								console.log("zoom in 2x");
-								uniforms.posOffset.value.x = Math.random() * 200000 - 100000;
-								uniforms.posOffset.value.y = Math.random() * 200000 - 100000;;
-								uniforms.zoom.value = Math.random() * (0.0001 - 0.00001) + 0.00001;
-								uniforms.pixelSize.value = Math.random() * (window.innerWidth - 100) + 100;
-								break;
-							case 3: // zoom out, x axis
-								console.log("zoom out, x axis");
-								uniforms.posOffset.value.x = Math.random() * 500000000 - 250000000;
-								uniforms.zoom.value = Math.random() * (1 - 0.000001) + 0.000001;
-								uniforms.pixelSize.value = Math.random() * (window.innerWidth - 500) + 500;
-								break;
-							case 4: // zoom out, y axis
-								console.log("zoom out, y axis");
-								uniforms.posOffset.value.y = Math.random() * 20000000 - 10000000;
-								uniforms.zoom.value = Math.random() * (1 - 0.000001) + 0.000001;
-								uniforms.pixelSize.value = Math.random() * (window.innerWidth - 500) + 500;
-								break;
-							case 5: // zoom out, x and y axis
-								console.log("zoom out, both axes");
-								uniforms.posOffset.value.x = Math.random() * 100000 - 50000;
-								uniforms.posOffset.value.y = Math.random() * 100000 - 50000;
-								// uniforms.zoom.value = Math.random() * (60000 - 0.000001) + 0.000001;
-								// uniforms.pixelSize.value = Math.random() * (window.innerWidth - 100) + 100;
-								break;
-							// case 6: // zoom to "galaxy" distance, don't translate
-								// break;
-							default:
-								console.log('not supposed to see this');
-								break;
-						}
-
-						
+						getNewSettings();
 						break;
 
 					// ==================================    RESET   ============================
