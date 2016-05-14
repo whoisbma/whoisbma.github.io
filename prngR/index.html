@@ -224,20 +224,20 @@
 					
 					case 0: // zoom out, x axis
 						console.log("zoom out, x axis");
-						uniforms.posOffset.value.x = Math.random() * 50000000 - 25000000;
+						uniforms.posOffset.value.x = Math.random() * 25000000 - 12500000;
 						uniforms.zoom.value = Math.random() * (1 - 0.000001) + 0.000001;
 						uniforms.pixelSize.value = Math.random() * (window.innerWidth - 500) + 500;
 						break;
 					case 1: // zoom out, y axis
 						console.log("zoom out, y axis");
-						uniforms.posOffset.value.y = Math.random() * 2000000 - 1000000;
+						uniforms.posOffset.value.y = Math.random() * 1000000 - 500000;
 						uniforms.zoom.value = Math.random() * (1 - 0.000001) + 0.000001;
 						uniforms.pixelSize.value = Math.random() * (window.innerWidth - 500) + 500;
 						break;
 					case 2: // zoom out, x and y axis
 						console.log("zoom out, both axes");
-						uniforms.posOffset.value.x = Math.random() * 100000 - 50000;
-						uniforms.posOffset.value.y = Math.random() * 100000 - 50000;
+						uniforms.posOffset.value.x = Math.random() * 10000 - 5000;
+						uniforms.posOffset.value.y = Math.random() * 10000 - 5000;
 						// uniforms.zoom.value = Math.random() * (60000 - 0.000001) + 0.000001;
 						// uniforms.pixelSize.value = Math.random() * (window.innerWidth - 100) + 100;
 						break;
