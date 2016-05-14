@@ -405,23 +405,25 @@
 				uniforms.time.value += 0.05;
 				switch (whichIncr) {
 					case 0:
-						uniforms.finalOffset.value.x += 0.00000001;
+						uniforms.posOffset.value.y += 0.05;
 						break;
 					case 1:
-						uniforms.finalOffset.value.x += 0.00000001;
+						uniforms.posOffset.value.y += 0.05;
 						break;
 					case 2:
+						uniforms.posOffset.value.y += 0.05;
+						break;
+
+					case 3:
 						uniforms.finalOffset.value.x += 0.00000001;
 						break;
-					case 3:
-						uniforms.posOffset.value.y += 0.05;
-						break;
 					case 4:
-						uniforms.posOffset.value.y += 0.05;
+						uniforms.finalOffset.value.x += 0.00000001;
 						break;
 					case 5:
-						uniforms.posOffset.value.y += 0.05;
+						uniforms.finalOffset.value.x += 0.00000001;
 						break;
+					
 					default:
 						break;
 				}
