@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - shader [Monjori]</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				color: #ffffff;
+				font-family:sans-serif;
+				font-size:12px;
+				text-align:right;
+				font-weight:bold;
+
+				background-color: #000000;
+				margin: 0;
+				overflow: hidden;
+			}
+
+			#info {
+				position: absolute;
+				top: 0px; width: 95%;
+				padding: 5px;
+			}
+
+			a {
+				color: #ffffff;
+			}
+
+			#oldie a { color:#da0 }
+		</style>
+	</head>
+	<body>
+
+		<div id="container"></div>
+		<!-- <div id="info">three.js shader testing, ripped off by Bryan Ma</a></div> -->
+
+		<script src="js/three.min.js"></script>
+		<script src="js/Detector.js"></script>
+		<script src="js/stats.min.js"></script>
+
+		<script id="vertexShader" type="x-shader/x-vertex">
+
+			void main()	{
+
+				gl_Position = vec4( position, 1.0 );
+
+			}
+
+		</script>
+
+		<script id="fragmentShader" type="x-shader/x-fragment">
+	
+			#define PI 3.14159265358979323846
+			uniform vec2 resolution;
+			uniform float time;
+
+			vec2 rotate2D (vec2 _st, float _angle) {
+    			_st -= 0.5;
+    			_st =  mat2(cos(_angle),-sin(_angle),
+                sin(_angle),cos(_angle)) * _st;
+    			_st += 0.5;
+    			return _st;
+			}
+
+			vec2 tile (vec2 _st, float _zoom) {
+    			_st *= _zoom;
+    			return fract(_st);
+			}
+
+			vec2 rotateTilePattern(vec2 _st){
+    			//  Scale the coordinate system by 2x2 
+    			_st *= 2.0;
+
+			    //  Give each cell an index number
+			    //  according to its position
+			    float index = 0.0;    
+			    index += step(1., mod(_st.x,2.0));
+			    index += step(1., mod(_st.y,2.0))*2.0;
+
+			    // Make each cell between 0.0 - 1.0
+			    _st = fract(_st);
+
+			    // Rotate each cell according to the index
+			    if(index == 1.0){
+			        //  Rotate cell 1 by 90 degrees
+			        _st = rotate2D(_st,(PI*0.5)+time*0.1);
+			    } else if(index == 2.0){
+			        //  Rotate cell 2 by -90 degrees
+			        _st = rotate2D(_st,(PI*-0.5)-time*0.11);
+			    } else if(index == 3.0){
+			        //  Rotate cell 3 by 180 degrees
+			        _st = rotate2D(_st,PI+time*0.12);
+			    } else {
+			    	_st = rotate2D(_st,time*0.13);
+			    }
+
+			    return _st;
+			}
+		
+			void main() {
+
+			    vec2 st = gl_FragCoord.xy/resolution.xy;
+			    st.x *= resolution.x/resolution.y;
+
+			    st = tile(st,20.0);
+			    st = rotateTilePattern(st);
+
+			    vec3 color = vec3(smoothstep(0.45, 0.55, fract(st.x*10.0)));
+
+			    gl_FragColor = vec4(color, 1.0);
+			}
+
+		</script>
+
+		<script>
+
+			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+			var container, stats;
+
+			var camera, scene, renderer;
+
+			var uniforms;
+
+			init();
+			animate();
+
+			function init() {
+
+				container = document.getElementById( 'container' );
+
+				camera = new THREE.Camera();
+				camera.position.z = 1;
+
+				scene = new THREE.Scene();
+
+				var geometry = new THREE.PlaneBufferGeometry( 2, 2 );
+
+				uniforms = {
+					time: { type: "f", value: 1.0 },
+					resolution: { type: "v2", value: new THREE.Vector2() }
+				};
+
+				var material = new THREE.ShaderMaterial( {
+
+					uniforms: uniforms,
+					vertexShader: document.getElementById( 'vertexShader' ).textContent,
+					fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+
+				} );
+
+				var mesh = new THREE.Mesh( geometry, material );
+				scene.add( mesh );
+
+				renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				container.appendChild( renderer.domElement );
+
+				// stats = new Stats();
+				// stats.domElement.style.position = 'absolute';
+				// stats.domElement.style.top = '0px';
+				// container.appendChild( stats.domElement );
+
+				onWindowResize();
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function onWindowResize( event ) {
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+				uniforms.resolution.value.x = renderer.domElement.width;
+				uniforms.resolution.value.y = renderer.domElement.height;
+
+			}
+
+			//
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				render();
+				// stats.update();
+
+			}
+
+			function render() {
+
+				uniforms.time.value += 0.05;
+
+				renderer.render( scene, camera );
+
+			}
+
+		</script>
+
+	</body>
+</html>
