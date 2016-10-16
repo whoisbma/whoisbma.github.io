@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Jusbust</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style></style>
+	</head>
+
+	<body>
+		<script src="js/three.js"></script>
+		<script src="js/OrbitControls.js"></script>
+		<script src="js/tween.js"></script>
+		<script src="js/DDSLoader.js"></script>
+		<script src="js/MTLLoader.js"></script>
+		<script src="js/OBJLoader.js"></script>
+		
+		<script>
+			var container;
+
+			var camera = new THREE.PerspectiveCamera( 35, window.innerWidth / window.innerHeight, 1, 2000 );
+			var scene = new THREE.Scene();
+			var renderer = new THREE.WebGLRenderer();
+			var controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+			var mouseX = 0, mouseY = 0;
+
+			var windowHalfX = window.innerWidth / 2;
+			var windowHalfY = window.innerHeight / 2;
+
+			var jus;
+
+			var geoFloor = new THREE.BoxGeometry( 2000, 1, 2000 );
+			var matFloor = new THREE.MeshPhongMaterial();
+			var mshFloor = new THREE.Mesh( geoFloor, matFloor );
+
+			var matBox = new THREE.MeshPhongMaterial( { color: 0xaaaaaa } );
+			var geoBox = new THREE.BoxGeometry( 3,4,3);//60, 5, 60 );
+			var mshBox = new THREE.Mesh( geoBox, matBox );
+
+			var spotLight1 = createSpotlight( 0xFF7F00 );
+			var spotLight2 = createSpotlight( 0x00FF7F );
+			var spotLight3 = createSpotlight( 0x7F00FF );
+
+			function init() {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.setClearColor(0x111111);
+
+				renderer.shadowMap.enabled = true;
+				renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+				renderer.gammaInput = true;
+				renderer.gammaOutput = true;
+
+				camera.position.set( 17, 3, - 2 );
+
+				var ambient = new THREE.AmbientLight( 0x444444 );
+				var directionalLight = new THREE.DirectionalLight( 0xffeedd );
+				directionalLight.position.set( 0, 0, 1 ).normalize();
+
+				spotLight1.position.set( 15, 40, 45 );
+				spotLight2.position.set( 0, 40, 35 );
+				spotLight3.position.set( - 15, 40, 45 );
+
+				mshBox.castShadow = true;
+				mshBox.receiveShadow = true;
+				mshBox.position.set( 0, 1.5, 0 );
+
+				matFloor.color.set( 0x808080 );
+				mshFloor.receiveShadow = true;
+				mshFloor.position.set( 0, - 0.05, 0 );
+
+				var onProgress = function ( xhr ) {
+					if ( xhr.lengthComputable ) {
+						var percentComplete = xhr.loaded / xhr.total * 100;
+						console.log( Math.round(percentComplete, 2) + '% downloaded' );
+					}
+				};
+
+				var onError = function ( xhr ) { };
+
+				THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
+
+				var mtlLoader = new THREE.MTLLoader();
+				mtlLoader.setPath( 'obj/jus/' );
+				mtlLoader.load( 'model_mesh.obj.mtl', function( materials ) {
+
+					materials.preload();
+
+					var objLoader = new THREE.OBJLoader();
+					objLoader.setMaterials( materials );
+					objLoader.setPath( 'obj/jus/' );
+					objLoader.load( 'model_mesh.obj', function ( object ) {
+						object.scale.set(10,10,10);
+						object.position.set( 0, 5.5, 0 );
+						object.castShadow = true;
+						object.receiveShadow = true;
+
+						object.traverse( function ( child ) {
+
+    						if ( child instanceof THREE.Mesh ) {
+        						child.castShadow = true;
+    							}
+							});
+
+						jus = object;
+						scene.add( jus );
+
+					}, onProgress, onError );
+				});
+
+
+				scene.add(ambient);
+				scene.add(directionalLight);
+				scene.add(spotLight1, spotLight2, spotLight3);
+				scene.add(mshFloor, mshBox);
+
+				container.appendChild( renderer.domElement );
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function onWindowResize() {
+
+				windowHalfX = window.innerWidth / 2;
+				windowHalfY = window.innerHeight / 2;
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+
+
+			function animate() {
+				tween( spotLight1 );
+				tween( spotLight2 );
+				tween( spotLight3 );
+				setTimeout( animate, 4000 );
+			}
+
+			function render() {
+
+				TWEEN.update();
+				var r = Date.now() * 0.0003;
+
+				camera.fov = 35 + 15 * Math.sin( 0.5 * r );
+				// camera.far = jus.position.length();	
+				camera.updateProjectionMatrix();
+
+				if (jus) {
+					jus.rotation.set(0,r,0);
+					var lookPos = new THREE.Vector3( jus.position.x, jus.position.y, jus.position.z ); 
+					lookPos.y ++;
+					camera.lookAt( lookPos );
+				}
+
+				renderer.render( scene, camera );
+				requestAnimationFrame( render );
+			}
+
+			function createSpotlight( color ) {
+				var newObj = new THREE.SpotLight( color, 2 );
+				newObj.castShadow = true;
+				newObj.angle = 0.3;
+				newObj.penumbra = 0.2;
+				newObj.decay = 2;
+				newObj.distance = 50;
+				newObj.shadow.mapSize.width = 1024;
+				newObj.shadow.mapSize.height = 1024;
+				return newObj;
+			}
+
+			function tween( light ) {
+				new TWEEN.Tween( light ).to( {
+					angle: ( Math.random() * 0.7 ) + 0.1,
+					penumbra: Math.random() + 1
+				}, Math.random() * 3000 + 2000 )
+				.easing( TWEEN.Easing.Quadratic.Out ).start();
+				new TWEEN.Tween( light.position ).to( {
+					x: ( Math.random() * 30 ) - 15,
+					y: ( Math.random() * 10 ) + 15,
+					z: ( Math.random() * 30 ) - 15
+				}, Math.random() * 3000 + 2000 )
+				.easing( TWEEN.Easing.Quadratic.Out ).start();
+			}
+
+			init();
+			render();
+			animate();
+
+		</script>
+	</body>
+</html>
