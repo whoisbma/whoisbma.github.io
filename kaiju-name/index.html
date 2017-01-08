@@ -11,6 +11,30 @@
    		h1 {
    			line-height: 40pt;
    		}
+
+   		div {
+   			margin: 10pt 0;
+   		}
+
+/*   		#drop {
+				min-height: 100px;
+				width: 250px;
+				background: #eee;
+				padding: 10px;
+				border:3px dotted #000;
+			}*/
+
+			fieldset { 
+				display: block;
+				margin-left: 2px;
+				margin-right: 2px;
+				padding-top: 0.35em;
+				padding-bottom: 0.625em;
+				padding-left: 0.75em;
+				padding-right: 0.75em;
+				border: 3px dotted #000;
+			}
+
 		</style>
 
 		<script>
@@ -60,9 +84,18 @@
 								"Walkers"
 							];
 
+
+
 			function onLoad() {
 
 			}
+
+			var upload = function() {
+				var txt = document.getElementById("txt");
+				console.log(txt);
+				var file = txt.files[0];
+				console.log(file);
+			};
 
 			function getName() {
 				var r1 = 0;
@@ -85,19 +118,31 @@
   				title.appendChild(br);
 			}
 
-			function addToList() {
-				var userInput = document.getElementById("userInput").value;
-    			names.push(userInput);
-    			// console.log(names[names.length - 1]);
-			}
+
+
+			// function addToList() {
+			// 	var userInput = document.getElementById("userInput").value;
+   //  			names.push(userInput);
+   //  			// console.log(names[names.length - 1]);
+			// }
 			
 		</script>
 	</head>
 	<body onload="onLoad()">
 		
-		<p><button id="next" onclick="getName()">generate name</button></p>
+		<div><button id="next" onclick="getName()">generate name</button></div>
 
-		<p><input type="text" id="userInput"> <button id="addNew" onclick="addToList()">add to list</button></p>
+		<form action="/" method="post" onsubmit="return upload();">
+		<fieldset>
+		<legend>Upload .txt file</legend>
+		<input type="file" name="txt" id="txt">
+		<input type="submit" value="Upload">
+		</fieldset>
+		</form>
+
+<!-- 		<div><input type="text" id="userInput"> <button id="addNew" onclick="addToList()">add to list</button></div> -->
+		<!-- <div id="drop">Drop files here</div> -->
+
   		<h1 id="title"></h1>
 	</body>
 </html>
