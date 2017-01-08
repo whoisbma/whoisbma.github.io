@@ -8,13 +8,66 @@
 		</style>
 
 		<script>
+			var mix;
 			var names = [
+								"Epoch",
+								"Striders",
+								"Hyperion",
+								"Children",
+								"Khronos",
+								"Walkers",
+								"Shattered ",
+								"Timeline",
+								"Eon",
+								"Sentinels",
+								"Rifters",
+								"Rift",
+								"Eternal ",
+								"Return",
+								"Project ",
+								"Recursion ",
+								"Fractured",
+								"Revision",
+								"Alternate",
+								"Cataclysm",
+								"Reprise ",
+								"Revision",
+								"Origin ",
+								"Point",
+								"Future",
+								"Verge",
+								"Front",
+								"Core",
+								"Omni",
+								"Warp",
+								"Jump",
+								"Last",
+								"Slip",
+								"Stasis",
+								"Always",
+								"Temporal",
+								"Wanderers",
+								"Verge",
+								"Steel",
+								"Concrete",
+								"Armored",
+								"Walkers"
+							];
 
-							]
+			function onLoad() {
 
+			}
+
+			function pressed() {
+				var r1 = Math.floor(Math.random() * names.length);
+				var r2 = Math.floor(Math.random() * names.length);
+				document.getElementById("title").innerHTML = names[r1] + " " + names[r2];
+			}
+			
 		</script>
 	</head>
-	<body>
-  		<h1 id="title-masher">yo</h1>
+	<body onload="onLoad()">
+		<button id="next" onclick="pressed()">hey</button>
+  		<h1 id="title">yo</h1>
 	</body>
 </html>
