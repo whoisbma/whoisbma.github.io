@@ -4,7 +4,13 @@
 		<meta charset="UTF-8">
 		<title>title</title>
 		<style type="text/css">
-   
+   		body {
+   			margin: 30pt;
+   		}
+
+   		h1 {
+   			line-height: 40pt;
+   		}
 		</style>
 
 		<script>
@@ -58,20 +64,40 @@
 
 			}
 
-			function pressed() {
+			function getName() {
 				var r1 = 0;
 				var r2 = 0;
 				while (r1 == r2) {
 					r1 = Math.floor(Math.random() * names.length);
 					r2 = Math.floor(Math.random() * names.length);
 				}
-				document.getElementById("title").append(names[r1] + " " + names[r2] + " - ");
+				// document.getElementById("title").append(names[r1] + " " + names[r2]);
+				// document.write("");
+
+				// var textNode = document.createTextNode(names[r1] + " " + names[r2]);
+				// element.appendChild(textNode);
+
+				var newtext = document.createTextNode(names[r1] + " " + names[r2]);
+				var title = document.getElementById("title");
+				var br = document.createElement("br");
+				
+  				title.appendChild(newtext);
+  				title.appendChild(br);
+			}
+
+			function addToList() {
+				var userInput = document.getElementById("userInput").value;
+    			names.push(userInput);
+    			// console.log(names[names.length - 1]);
 			}
 			
 		</script>
 	</head>
 	<body onload="onLoad()">
-		<button id="next" onclick="pressed()">push me</button>
+		
+		<p><button id="next" onclick="getName()">generate name</button></p>
+
+		<p><input type="text" id="userInput"><button id="addNew" onclick="addToList()"> add to list</button></p>
   		<h1 id="title"></h1>
 	</body>
 </html>
