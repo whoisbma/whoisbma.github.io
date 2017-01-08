@@ -61,6 +61,8 @@
     					for (var i = 0; i < names.length; i++) {
     						names[i].trim();
     						console.log(names[i]);
+    						var button = document.getElementById("getname");
+    						button.hidden = false;
     					}
 					};
     				fr.readAsText(file);
@@ -117,14 +119,14 @@
 	</head>
 	<body onload="onLoad()">
 		
-		<div><button id="next" onclick="getName()">generate name</button></div>
-
 		<fieldset>
 		<legend>Upload .txt file</legend>
 		<input type="file" id="file" onchange="startRead()">
 <!-- 		<input type="submit" value="Upload"> -->
 		</fieldset>
 		</form>
+
+		<div><button id="getname" onclick="getName()" hidden="true">generate name</button></div>
 
 <!-- 		<div><input type="text" id="userInput"> <button id="addNew" onclick="addToList()">add to list</button></div> -->
 		<!-- <div id="drop">Drop files here</div> -->
