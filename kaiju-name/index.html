@@ -59,9 +59,13 @@
 			}
 
 			function pressed() {
-				var r1 = Math.floor(Math.random() * names.length);
-				var r2 = Math.floor(Math.random() * names.length);
-				document.getElementById("title").innerHTML = names[r1] + " " + names[r2];
+				var r1 = 0;
+				var r2 = 0;
+				while (r1 == r2) {
+					r1 = Math.floor(Math.random() * names.length);
+					r2 = Math.floor(Math.random() * names.length);
+				}
+				document.getElementById("title").append(names[r1] + " " + names[r2] + " - ");
 			}
 			
 		</script>
