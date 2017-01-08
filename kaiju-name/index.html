@@ -39,50 +39,7 @@
 
 		<script>
 			var mix;
-			var names = [
-								"Epoch",
-								"Striders",
-								"Hyperion",
-								"Children",
-								"Khronos",
-								"Walkers",
-								"Shattered ",
-								"Timeline",
-								"Eon",
-								"Sentinels",
-								"Rifters",
-								"Rift",
-								"Eternal ",
-								"Return",
-								"Project ",
-								"Recursion ",
-								"Fractured",
-								"Revision",
-								"Alternate",
-								"Cataclysm",
-								"Reprise ",
-								"Revision",
-								"Origin ",
-								"Point",
-								"Future",
-								"Verge",
-								"Front",
-								"Core",
-								"Omni",
-								"Warp",
-								"Jump",
-								"Last",
-								"Slip",
-								"Stasis",
-								"Always",
-								"Temporal",
-								"Wanderers",
-								"Verge",
-								"Steel",
-								"Concrete",
-								"Armored",
-								"Walkers"
-							];
+			var names = [];
 
 
 
@@ -90,12 +47,33 @@
 
 			}
 
-			var upload = function() {
-				var txt = document.getElementById("txt");
-				console.log(txt);
-				var file = txt.files[0];
-				console.log(file);
-			};
+			function startRead(evt) {
+    			var file = document.getElementById('file').files[0];
+    			if (file) {
+    				// getAsText(file);
+    				fr = new FileReader();
+    				fr.onload = function(e) {
+    					// e.target.result should contain the text
+    					// console.log(fr.result);
+    					var result = fr.result;
+
+    					names = result.split('\n');
+    					for (var i = 0; i < names.length; i++) {
+    						names[i].trim();
+    						console.log(names[i]);
+    					}
+					};
+    				fr.readAsText(file);
+       	 		// alert("Name: " + file.name + "\n" + "Last Modified Date :" + file.lastModifiedDate);
+    			}
+			}
+
+			// var upload = function() {
+			// 	var txt = document.getElementById("txt");
+			// 	console.log(txt);
+			// 	var file = txt.files[0];
+			// 	console.log(file);
+			// };
 
 			function getName() {
 				var r1 = 0;
@@ -127,16 +105,24 @@
 			// }
 			
 		</script>
+
+	<!-- 	<script>
+			if (window.File && window.FileReader && window.FileList && window.Blob) {
+				alert("File API supported.!");
+			} else {
+				alert("The File APIs are not fully supported in this browser.");
+			}
+		</script> -->
+
 	</head>
 	<body onload="onLoad()">
 		
 		<div><button id="next" onclick="getName()">generate name</button></div>
 
-		<form action="/" method="post" onsubmit="return upload();">
 		<fieldset>
 		<legend>Upload .txt file</legend>
-		<input type="file" name="txt" id="txt">
-		<input type="submit" value="Upload">
+		<input type="file" id="file" onchange="startRead()">
+<!-- 		<input type="submit" value="Upload"> -->
 		</fieldset>
 		</form>
 
