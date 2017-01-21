@@ -1,0 +1,445 @@
+<DOCTYPE html>
+<html>
+<head>
+	<title>sky material build</title>
+
+	<script src="./jquery.min.js"></script>
+	<script src="./three.min.js"></script>
+	<script src="./perlin.js"></script>
+
+	<script type="x-shader/x-vertex" id="vertexShader">
+
+	
+	</script>
+
+
+	<script type="x-shader/x-fragment" id="fragmentShader">
+		
+
+	</script>
+
+	<script>
+		var renderer = null,
+				scene = null,
+				camera = null;
+
+		var ambientLight = null;
+		var ambientCol = [0,0,0];
+		var directionalLight1 = null;
+		var directionalLight2 = null;
+		var directionalLight3 = null;
+
+		const subdivisions = 4;
+
+		var sky1 = null;
+		var sky1Radius = 10;
+		var sky1Orig = [];
+		var sky2 = null;
+		var sky2Radius = 1010;
+		var sky2Orig = [];
+		var sky3 = null;
+		var sky3Radius = 2010;
+		var sky3Orig = [];
+
+		var skyShaderMaterial;
+
+		// var start = Date.now();
+		var clock = new THREE.Clock();
+		var time;
+
+		var modeCounter = new THREE.Clock();
+
+		var FOV = 45;
+
+		var whichEffect = 0;
+
+		var lerpSpeed = 0.001;
+    var transitionTime = 60;
+
+		$(document).ready(function() {
+
+			// RENDERER, DOM, CAMERA -------------------------------------------
+
+			var container = document.getElementById("container");
+			renderer = new THREE.WebGLRenderer( { antialias : true } );
+			renderer.setSize(container.offsetWidth, container.offsetHeight);
+			container.appendChild(renderer.domElement);
+
+			scene = new THREE.Scene();
+			camera = new THREE.PerspectiveCamera(FOV, container.offsetWidth/container.offsetHeight, 1, 4000);
+			camera.position.set(0,0,90);
+
+			// TIME SETUP -------------------------------------------
+
+			// time = Date.now() - start;
+			time = 0;
+			modeCounter.start();
+
+
+			// LIGHTS -------------------------------------------
+
+			setUpLights();
+
+			// MESHES AND MATERIALS -------------------------------------------
+
+			var skyTexture = new THREE.TextureLoader().load( './images/skySphere1.jpg' );
+			var skyMaterial = new THREE.MeshLambertMaterial( { 
+				map: skyTexture, 
+				side: THREE.DoubleSide 
+			} );
+
+			skyShaderMaterial = new THREE.ShaderMaterial( {
+				uniforms: {
+					tShine: { type: "t", value: skyTexture },
+					time: { type: "f", value: 0 },
+					weight: { type: "f", value: 0 }
+				},
+				vertexShader: document.getElementById('vertexShader').textContent,
+				fragmentShader: document.getElementById('fragmentShader').textContent//,
+//				side: THREE.BothSide
+			});
+
+			sky1 = new THREE.Mesh( new THREE.IcosahedronGeometry( sky1Radius, subdivisions ), skyMaterial);
+			sky1.position.set(0, 0, 0);
+			explodeModifier(sky1.geometry);
+			scene.add(sky1);
+
+			sky2 = new THREE.Mesh( new THREE.IcosahedronGeometry( sky2Radius, subdivisions ), skyMaterial);
+			sky2.position.set(0, 0, 0);
+			explodeModifier(sky2.geometry);
+			scene.add( sky2 );
+
+			sky3 = new THREE.Mesh( new THREE.IcosahedronGeometry( sky3Radius, subdivisions ), skyMaterial);
+			sky3.position.set(0, 0, 0);
+			explodeModifier(sky3.geometry);
+			scene.add( sky3 );
+
+			sky1Orig = getAllStartingPoints(sky1);
+			sky2Orig = getAllStartingPoints(sky2);
+			sky3Orig = getAllStartingPoints(sky3);
+
+			// SET UP EVENTS -------------------------------------------
+
+			document.addEventListener('click', onDocumentMouseDown, false);
+			window.addEventListener('resize', onWindowResize, false);
+
+			run();
+		});
+
+		function checkForModeChange() {
+    		if (modeCounter.getElapsedTime() > transitionTime) {
+    				modeCounter.start();
+    				whichEffect++;
+    			}
+    	}
+
+		// MAIN LOOP
+
+		function run() {
+    	animate();
+			renderer.render(scene, camera);
+			requestAnimationFrame(run);
+		}
+
+		function animate() {
+			// skyShaderMaterial.uniforms['time'].value = 0.0001 * (time);
+			// skyShaderMaterial.uniforms['weight'].value = 5;
+
+			var delta = clock.getDelta() * 1000;
+			time += delta;
+			// time = Date.now() - start;
+			updateLights();
+			sky1.rotation.x += 0.00005;
+    	sky1.rotation.y += 0.00003;
+
+    	sky2.rotation.x -= 0.00005;
+    	sky2.rotation.y -= 0.00002;
+
+    	sky3.rotation.x += 0.00003;
+    	sky3.rotation.y += 0.00005
+
+    	switch (whichEffect) {
+    		case 0:
+    			// console.log("0 - nothing");
+    			checkForModeChange();
+    			break;
+    		case 1:
+    			// console.log("1 - sky1 dyamics, no other motion");
+    			asplode(sky1, sky1Orig);
+    			checkForModeChange();
+    			break;
+    		case 2:
+    			// console.log("2 - sky1 dynamics, shrinking down");
+    			asplode(sky1, sky1Orig);
+    			lerpToCenter(sky1, lerpSpeed);
+    			checkForModeChange();
+    			break;
+    		case 3:
+    			// console.log("3 - sky 1 continue to shrink and asplode, sky 2 begins to implode");
+    			asplode(sky1, sky1Orig);
+    			lerpToCenter(sky1, lerpSpeed);
+    			implode(sky2, sky2Orig);
+    			checkForModeChange();
+    			break;
+    		case 4:
+    			// console.log("4 - sky 2 imploding and shrinking and sky1 and 3 shrinking");
+    			implode(sky2);
+    			lerpToCenter(sky1, lerpSpeed);
+    			lerpToResetVerts(sky2, sky1Orig, lerpSpeed);
+    			lerpToResetVerts(sky3, sky2Orig, lerpSpeed);
+    			checkForModeChange();
+    			break;
+    		case 5:
+    			// console.log("5 - sky 1 moves to sky 3 start pos");
+    			moveToStartPoints(sky1, sky3Orig);	
+    			lerpToResetVerts(sky2, sky1Orig, lerpSpeed);
+    			lerpToResetVerts(sky3, sky2Orig, lerpSpeed);
+    			implode(sky2);
+    			whichEffect++;
+    			break;
+    		case 6:
+    			// console.log("6 - sky2 stops imploding, moves to start point");
+    			lerpToResetVerts(sky2, sky1Orig, lerpSpeed);
+    			lerpToResetVerts(sky3, sky2Orig, lerpSpeed);
+    			checkForModeChange();
+    			break;
+    		case 7:
+    			// console.log("7 - sky2 moves to start points, sky3 starts flatsploding");
+    			lerpToResetVerts(sky2, sky1Orig, lerpSpeed);
+    			flatsplode(sky3);
+    			checkForModeChange();
+    			break;
+    		case 8:
+    			// console.log("8 - sky2 starts to shrink, sky3 flatsplode and shrink, sky1 shrink");
+    			lerpToCenter(sky2, lerpSpeed);
+    			flatsplode(sky3);
+    			asplode(sky3, sky1Orig);
+    			lerpToResetVerts(sky3, sky1Orig, lerpSpeed);
+    			lerpToResetVerts(sky1, sky2Orig, lerpSpeed);
+    			checkForModeChange();
+    			break;
+    		case 9:
+    			// console.log("9 - sky2 continues to shrink to nothing, sky3 multisplode and ...");
+    			lerpToCenter(sky2, lerpSpeed);
+    			lerpToResetVerts(sky3, sky1Orig, lerpSpeed);
+    			lerpToResetVerts(sky1, sky2Orig, lerpSpeed);
+    			checkForModeChange();
+    			break;
+    		case 10:
+    			moveToStartPoints(sky2, sky3Orig);
+    			lerpToResetVerts(sky3, sky1Orig, lerpSpeed);
+    			lerpToResetVerts(sky1, sky2Orig, lerpSpeed);
+    			whichEffect++;
+    		case 11:
+    			asplode(sky1, sky2Orig);
+    			checkForModeChange();
+    			break;
+    		case 12:
+    			asplode(sky1, sky2Orig);
+    			lerpToResetVerts(sky1, sky1Orig, lerpSpeed);
+    			lerpToResetVerts(sky2, sky2Orig, lerpSpeed);
+    			lerpToCenter(sky3, lerpSpeed);
+    			checkForModeChange();
+    			break;
+    		case 13:
+    			lerpToResetVerts(sky1, sky1Orig, lerpSpeed);
+    			lerpToResetVerts(sky2, sky2Orig, lerpSpeed);
+    			checkForModeChange();
+    			break;
+    		case 14:
+    			moveToStartPoints(sky3, sky3Orig);
+    			// lerpToResetVerts(sky1, sky1Orig, 0.001);
+    			// lerpToResetVerts(sky2, sky2Orig, 0.001);
+    			whichEffect = 0;
+    			break;
+    	}
+    	
+		}
+
+		function onDocumentMouseDown(event) {
+			whichEffect = (whichEffect+1) % 15;
+		}
+
+		function setUpLights() {
+			ambientCol[0] = Math.floor(152+(Math.sin(time * 0.0001) * 152));
+			ambientCol[1] = Math.floor(152+(Math.sin(time * 0.0001) * 152));
+			ambientCol[2] = Math.floor(152+(Math.sin(time * 0.0001) * 152));
+			// var ambientCol = new THREE.Color("rgb(255, 0, 0)");
+			ambientLight = new THREE.AmbientLight();
+			ambientLight.color.setStyle('rgb('+ambientCol[0]+','+ambientCol[1]+','+ambientCol[2]+')');
+			scene.add(ambientLight);
+
+			directionalLight1 = new THREE.DirectionalLight('rgb(100,50,50)', 1.0);
+			directionalLight1.position.set(Math.sin(time*0.000051) * 2, Math.cos(time*0.000053) + Math.sin(time*0.00051)* 2, Math.sin(time*0.001) * 2);
+			scene.add(directionalLight1);
+
+			directionalLight2 = new THREE.DirectionalLight('rgb(130,100,50)', 1.0);
+			directionalLight2.position.set(Math.cos(time*0.00013) + Math.sin(time*0.0011)* 2, Math.sin(time*0.00011) * 2, Math.sin(time*0.001) * 2);
+			scene.add(directionalLight2);
+
+			directionalLight3 = new THREE.DirectionalLight('rgb(40,40,70)', 1.0);
+			directionalLight3.position.set(Math.sin(time*0.0001) * 2, Math.sin(time*0.0005) * 2, Math.cos(time*0.0003) + Math.sin(time*0.001)* 2);
+		}
+
+		function updateLights() {
+			ambientCol[0] = Math.floor(152+(Math.sin(time * 0.0001) * 152));
+			ambientCol[1] = Math.floor(152+(Math.sin(time * 0.0001) * 152));
+			ambientCol[2] = Math.floor(152+(Math.sin(time * 0.0001) * 152));
+			ambientLight.color.setStyle('rgb('+ambientCol[0]+','+ambientCol[1]+','+ambientCol[2]+')');
+
+			directionalLight1.position.set(Math.sin(time*0.000021) * 2, Math.cos(time*0.000023) + Math.sin(time*0.00021)* 2, Math.sin(time*0.0005) * 2);
+
+			directionalLight2.position.set(Math.cos(time*0.000053) + Math.sin(time*0.00051)* 2, Math.sin(time*0.000051) * 2, Math.sin(time*0.0006) * 2);
+
+			directionalLight3.position.set(Math.sin(time*0.00008) * 2, Math.sin(time*0.00001) * 2, Math.cos(time*0.0008) + Math.sin(time*0.0002)* 2);
+		}
+
+		// DEFORMATION FUNCTIONS
+
+		function implode(mesh) {
+			var xoff = 0;
+			mesh.geometry.faces.forEach((face, i) => {
+				var a = (noise.simplex3(xoff, time * 0.0005, time * 0.0001)) - 0.5;
+
+				var modFace = face.normal.clone();
+				modFace.multiplyScalar(a*0.1);
+				mesh.geometry.vertices[face.a].add(modFace);
+				mesh.geometry.vertices[face.b].add(modFace);
+				mesh.geometry.vertices[face.c].add(modFace);
+
+				xoff += 0.1;
+			});
+			mesh.geometry.verticesNeedUpdate = true;
+		}
+
+		function flatsplode(mesh) {
+			var xoff = 0;
+			mesh.geometry.faces.forEach((face, i) => {
+				var a =/* 0.5 + 0.5 * */(noise.simplex2(xoff, time * 0.0005));
+				
+				var modFace = face.normal.clone();
+				modFace.multiplyScalar(a*0.1);
+				mesh.geometry.vertices[face.a].add(modFace);
+				mesh.geometry.vertices[face.b].add(modFace);
+				mesh.geometry.vertices[face.c].add(modFace);
+
+				xoff += 0.1;
+			});
+			mesh.geometry.verticesNeedUpdate = true;
+		}
+
+		function asplode(mesh, originalVerts) {
+			mesh.geometry.faces.forEach((face, i) => {
+				var noiseMagA = noise.simplex3(face.a, originalVerts.vertices[face.a].y, time*0.001) * 0.05;
+				var noiseMagB = noise.simplex3(face.b, originalVerts.vertices[face.b].y, time*0.001) * 0.05;
+				var noiseMagC = noise.simplex3(face.c, originalVerts.vertices[face.c].y, time*0.001) * 0.05;
+
+				// var noiseMagA = noise.simplex2(face.a, mesh.geometry.vertices[face.a].y, time*0.001) * 0.11;
+				// var noiseMagB = noise.simplex2(face.b, mesh.geometry.vertices[face.b].y, time*0.001) * 0.11;
+				// var noiseMagC = noise.simplex2(face.c, mesh.geometry.vertices[face.c].y, time*0.001) * 0.11;
+
+				// var noiseMagA = noise.simplex2(face.a, time*0.001) * 0.11;
+				// var noiseMagB = noise.simplex2(face.b, time*0.001) * 0.11;
+				// var noiseMagC = noise.simplex2(face.c, time*0.001) * 0.11;
+
+				var modVertA = face.normal.clone();//face.vertexNormals[0].clone();
+				var modVertB = face.normal.clone();//face.vertexNormals[1].clone();
+				var modVertC = face.normal.clone();//face.vertexNormals[2].clone(); 
+
+				modVertA.multiplyScalar(noiseMagA);
+				modVertB.multiplyScalar(noiseMagB);
+				modVertC.multiplyScalar(noiseMagC);
+
+				mesh.geometry.vertices[face.a].add(modVertA);
+				mesh.geometry.vertices[face.b].add(modVertB);
+				mesh.geometry.vertices[face.c].add(modVertC);
+			});
+			mesh.geometry.verticesNeedUpdate = true;
+		}
+
+
+
+		function lerpToResetVerts(mesh, originalVerts, amount) {
+			mesh.geometry.vertices.forEach((vertex, i) => {
+				var d = vertex.distanceTo(originalVerts.vertices[i]);
+				if (d > 0.0001) {
+					vertex.lerp(originalVerts.vertices[i], amount);
+				} else {
+					vertex = originalVerts.vertices[i].clone();
+				}
+			});
+			mesh.geometry.verticesNeedUpdate = true;
+		}
+
+		// moves all vertices by random amount
+		function randomizeVertices(mesh) {
+			mesh.geometry.vertices.forEach((vertex, i) => {
+				vertex.x += Math.random() * 5 - 2.5;
+				vertex.y += Math.random() * 5 - 2.5;
+				vertex.z += Math.random() * 5 - 2.5;
+			});
+			mesh.geometry.verticesNeedUpdate = true;
+		}
+
+		function lerpToCenter(mesh, amount) {
+			mesh.geometry.vertices.forEach((vertex, i) => {
+				vertex.lerp((new THREE.Vector3(0,0,0)), amount);
+			});
+			mesh.geometry.verticesNeedUpdate = true;
+		}
+
+		// UTILITY FUNCTIONS ------------------------------------------------
+
+		function scaleMeshAndOrig(x, y, z, mesh, originalVerts) {
+			mesh.geometry.scale(x,y,z);
+			originalVerts.scale(x,y,z);
+		}
+
+		function getAllStartingPoints(mesh) {
+			var originalVerts = mesh.geometry.clone();
+			return originalVerts;
+		}
+
+		function moveToStartPoints(mesh, originalVerts) {
+			mesh.geometry = originalVerts.clone();
+		}
+
+		function onWindowResize() {
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			camera.projectionMatrix.makePerspective(FOV, window.innerWidth/window.innerHeight, 1, 10000);
+		}
+
+		function explodeModifier(geometry) {
+			var vertices = [];
+
+			for (var i = 0, il = geometry.faces.length; i < il; i++) {
+				var n = vertices.length;
+				var face = geometry.faces[i];
+				var a = face.a;
+				var b = face.b;
+				var c = face.c;
+				var va = geometry.vertices[a];
+				var vb = geometry.vertices[b];
+				var vc = geometry.vertices[c];
+				vertices.push(va.clone());
+				vertices.push(vb.clone());
+				vertices.push(vc.clone());
+				face.a = n;
+				face.b = n+1;
+				face.c = n+2;
+			}
+
+			geometry.vertices = vertices;
+		}
+
+		// TEST FUNCTIONS ------------------------------------------------
+		
+
+	</script>
+</head>
+
+<body>
+	<div id="container" style="width:100%; height:100%; overflow:hidden; position:absolute; background-color: #000000"></div>
+</body>
+
+</html>
