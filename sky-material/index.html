@@ -411,12 +411,12 @@
 		function onWindowResize() {
 			// renderer.setSize(window.innerWidth, window.innerHeight);
 			// camera.projectionMatrix.makePerspective(FOV, window.innerWidth/window.innerHeight, 1, 10000);
+			renderer.setSize(container.offsetWidth/2, container.offsetHeight/2, false);
+			container.appendChild(renderer.domElement);
 
-			renderer.setSize(container.offsetWidth/2, container.offsetHeight/2);
-			// container.appendChild(renderer.domElement);
+			renderer.domElement.style.width = '100%';
+			renderer.domElement.style.height = '100%';
 
-			renderer.domElement.style.width = renderer.domElement.width * 2 + 'px';
-			renderer.domElement.style.height = renderer.domElement.height * 2 + 'px';
 			camera.projectionMatrix.makePerspective(FOV, window.innerWidth/window.innerHeight, 1, 10000);
 		}
 
