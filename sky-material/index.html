@@ -62,11 +62,14 @@
 
 			var container = document.getElementById("container");
 			renderer = new THREE.WebGLRenderer( { antialias : true } );
-			renderer.setSize(container.offsetWidth, container.offsetHeight);
+			renderer.setSize(container.offsetWidth/2, container.offsetHeight/2, false);
 			container.appendChild(renderer.domElement);
 
+			renderer.domElement.style.width = '100%';
+			renderer.domElement.style.height = '100%';
+
 			scene = new THREE.Scene();
-			camera = new THREE.PerspectiveCamera(FOV, container.offsetWidth/container.offsetHeight, 1, 4000);
+			camera = new THREE.PerspectiveCamera(FOV, container.offsetWidth/container.offsetHeight, 1, 10000);
 			camera.position.set(0,0,90);
 
 			// TIME SETUP -------------------------------------------
@@ -126,8 +129,9 @@
 			run();
 		});
 
-		function checkForModeChange() {
-    		if (modeCounter.getElapsedTime() > transitionTime) {
+		function checkForModeChange(timeMod) {
+			timeMod = timeMod || 1;
+    		if (modeCounter.getElapsedTime() > transitionTime * timeMod) {
     				modeCounter.start();
     				whichEffect++;
     			}
@@ -161,7 +165,7 @@
     	switch (whichEffect) {
     		case 0:
     			// console.log("0 - nothing");
-    			checkForModeChange();
+    			checkForModeChange(0.1);
     			break;
     		case 1:
     			// console.log("1 - sky1 dyamics, no other motion");
@@ -287,11 +291,11 @@
 			ambientCol[2] = Math.floor(152+(Math.sin(time * 0.0001) * 152));
 			ambientLight.color.setStyle('rgb('+ambientCol[0]+','+ambientCol[1]+','+ambientCol[2]+')');
 
-			directionalLight1.position.set(Math.sin(time*0.000021) * 2, Math.cos(time*0.000023) + Math.sin(time*0.00021)* 2, Math.sin(time*0.0005) * 2);
+			directionalLight1.position.set(Math.sin(time*0.000021) * 2, Math.cos(time*0.000023) + Math.sin(time*0.00021)* 2, Math.sin(time*0.0001) * 2);
 
-			directionalLight2.position.set(Math.cos(time*0.000053) + Math.sin(time*0.00051)* 2, Math.sin(time*0.000051) * 2, Math.sin(time*0.0006) * 2);
+			directionalLight2.position.set(Math.cos(time*0.000053) + Math.sin(time*0.00051)* 2, Math.sin(time*0.000051) * 2, Math.sin(time*0.00015) * 2);
 
-			directionalLight3.position.set(Math.sin(time*0.00008) * 2, Math.sin(time*0.00001) * 2, Math.cos(time*0.0008) + Math.sin(time*0.0002)* 2);
+			directionalLight3.position.set(Math.sin(time*0.00008) * 2, Math.sin(time*0.00001) * 2, Math.cos(time*0.0008) + Math.sin(time*0.00012)* 2);
 		}
 
 		// DEFORMATION FUNCTIONS
@@ -330,9 +334,9 @@
 
 		function asplode(mesh, originalVerts) {
 			mesh.geometry.faces.forEach((face, i) => {
-				var noiseMagA = noise.simplex3(face.a, originalVerts.vertices[face.a].y, time*0.001) * 0.05;
-				var noiseMagB = noise.simplex3(face.b, originalVerts.vertices[face.b].y, time*0.001) * 0.05;
-				var noiseMagC = noise.simplex3(face.c, originalVerts.vertices[face.c].y, time*0.001) * 0.05;
+				var noiseMagA = noise.simplex3(face.a * 0.1, originalVerts.vertices[face.a].y, time*0.001) * 0.05;
+				var noiseMagB = noise.simplex3(face.b * 0.1, originalVerts.vertices[face.b].y, time*0.001) * 0.05;
+				var noiseMagC = noise.simplex3(face.c * 0.1, originalVerts.vertices[face.c].y, time*0.001) * 0.05;
 
 				// var noiseMagA = noise.simplex2(face.a, mesh.geometry.vertices[face.a].y, time*0.001) * 0.11;
 				// var noiseMagB = noise.simplex2(face.b, mesh.geometry.vertices[face.b].y, time*0.001) * 0.11;
@@ -405,7 +409,14 @@
 		}
 
 		function onWindowResize() {
-			renderer.setSize(window.innerWidth, window.innerHeight);
+			// renderer.setSize(window.innerWidth, window.innerHeight);
+			// camera.projectionMatrix.makePerspective(FOV, window.innerWidth/window.innerHeight, 1, 10000);
+
+			renderer.setSize(container.offsetWidth/2, container.offsetHeight/2);
+			// container.appendChild(renderer.domElement);
+
+			renderer.domElement.style.width = renderer.domElement.width * 2 + 'px';
+			renderer.domElement.style.height = renderer.domElement.height * 2 + 'px';
 			camera.projectionMatrix.makePerspective(FOV, window.innerWidth/window.innerHeight, 1, 10000);
 		}
 
