@@ -203,14 +203,12 @@
     			break;
     		case 6:
     			// console.log("6 - sky2 moves to start point");
-    			implode(sky2);
     			lerpToResetVerts(sky2, sky1Orig, lerpSpeed);
     			lerpToResetVerts(sky3, sky2Orig, lerpSpeed);
     			checkForModeChange();
     			break;
     		case 7:
     			// console.log("7 - sky2 moves to start points, sky3 starts flatsploding");
-    			implode(sky2);
     			lerpToResetVerts(sky2, sky1Orig, lerpSpeed);
     			flatsplode(sky3);
     			checkForModeChange();
@@ -283,11 +281,11 @@
 			scene.add(directionalLight1);
 
 			directionalLight2 = new THREE.DirectionalLight('rgb(130,100,50)', 1.0);
-			directionalLight2.position.set(Math.cos(time*0.00013) + Math.sin(time*0.0011)* 2, Math.sin(time*0.00011) * 2, Math.sin(time*0.001) * 2);
+			directionalLight2.position.set(Math.cos(time*0.00008) + Math.sin(time*0.0011)* 2, Math.sin(time*0.00011) * 2, Math.sin(time*0.001) * 2);
 			scene.add(directionalLight2);
 
 			directionalLight3 = new THREE.DirectionalLight('rgb(40,40,70)', 1.0);
-			directionalLight3.position.set(Math.sin(time*0.0001) * 2, Math.sin(time*0.0005) * 2, Math.cos(time*0.0003) + Math.sin(time*0.001)* 2);
+			directionalLight3.position.set(Math.sin(time*0.00003) * 2, Math.sin(time*0.0005) * 2, Math.cos(time*0.0003) + Math.sin(time*0.001)* 2);
 		}
 
 		function updateLights() {
@@ -305,13 +303,15 @@
 
 		// DEFORMATION FUNCTIONS
 
-		function implode(mesh) {
+		function implode(mesh, noiseMod) {
+
+			noiseMod = noiseMod || 1.0;
 			var xoff = 0;
 			mesh.geometry.faces.forEach((face, i) => {
 				var a = (noise.simplex3(xoff, time * 0.0005, time * 0.0001)) - 0.5;
 
 				var modFace = face.normal.clone();
-				modFace.multiplyScalar(a*0.1);
+				modFace.multiplyScalar(a*noiseMod);
 				mesh.geometry.vertices[face.a].add(modFace);
 				mesh.geometry.vertices[face.b].add(modFace);
 				mesh.geometry.vertices[face.c].add(modFace);
