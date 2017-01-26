@@ -202,19 +202,22 @@
     			whichEffect++;
     			break;
     		case 6:
-    			// console.log("6 - sky2 stops imploding, moves to start point");
+    			// console.log("6 - sky2 moves to start point");
+    			implode(sky2);
     			lerpToResetVerts(sky2, sky1Orig, lerpSpeed);
     			lerpToResetVerts(sky3, sky2Orig, lerpSpeed);
     			checkForModeChange();
     			break;
     		case 7:
     			// console.log("7 - sky2 moves to start points, sky3 starts flatsploding");
+    			implode(sky2);
     			lerpToResetVerts(sky2, sky1Orig, lerpSpeed);
     			flatsplode(sky3);
     			checkForModeChange();
     			break;
     		case 8:
     			// console.log("8 - sky2 starts to shrink, sky3 flatsplode and shrink, sky1 shrink");
+    			implode(sky2);
     			lerpToCenter(sky2, lerpSpeed);
     			flatsplode(sky3);
     			asplode(sky3, sky1Orig);
@@ -226,11 +229,13 @@
     			// console.log("9 - sky2 continues to shrink to nothing, sky3 multisplode and ...");
     			lerpToCenter(sky2, lerpSpeed);
     			lerpToResetVerts(sky3, sky1Orig, lerpSpeed);
+    			asplode(sky3, sky1Orig);
     			lerpToResetVerts(sky1, sky2Orig, lerpSpeed);
     			checkForModeChange();
     			break;
     		case 10:
     			moveToStartPoints(sky2, sky3Orig);
+    			asplode(sky3, sky1Orig);
     			lerpToResetVerts(sky3, sky1Orig, lerpSpeed);
     			lerpToResetVerts(sky1, sky2Orig, lerpSpeed);
     			whichEffect++;
