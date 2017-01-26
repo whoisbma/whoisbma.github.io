@@ -314,7 +314,7 @@
 				var a = (noise.simplex3(xoff, time * 0.0005, time * 0.0001)) - 0.5;
 
 				var modFace = face.normal.clone();
-				modFace.multiplyScalar(a*noiseMod);
+				modFace.multiplyScalar((a*0.1) * noiseMod);
 				mesh.geometry.vertices[face.a].add(modFace);
 				mesh.geometry.vertices[face.b].add(modFace);
 				mesh.geometry.vertices[face.c].add(modFace);
