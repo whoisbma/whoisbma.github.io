@@ -54,7 +54,7 @@
 		var whichEffect = 0;
 
 		var lerpSpeed = 0.001;
-    var transitionTime = 60;
+    var transitionTime = 90;
 
 		$(document).ready(function() {
 
@@ -237,6 +237,7 @@
     		case 10:
     			moveToStartPoints(sky2, sky3Orig);
     			asplode(sky3, sky1Orig);
+    			implode(sky3);
     			lerpToResetVerts(sky3, sky1Orig, lerpSpeed);
     			lerpToResetVerts(sky1, sky2Orig, lerpSpeed);
     			whichEffect++;
