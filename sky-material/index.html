@@ -241,6 +241,7 @@
     			lerpToResetVerts(sky1, sky2Orig, lerpSpeed);
     			whichEffect++;
     		case 11:
+    			implode(sky3);
     			asplode(sky1, sky2Orig);
     			checkForModeChange();
     			break;
@@ -249,6 +250,7 @@
     			lerpToResetVerts(sky1, sky1Orig, lerpSpeed);
     			lerpToResetVerts(sky2, sky2Orig, lerpSpeed);
     			lerpToCenter(sky3, lerpSpeed);
+    			implode(sky3);
     			checkForModeChange();
     			break;
     		case 13:
