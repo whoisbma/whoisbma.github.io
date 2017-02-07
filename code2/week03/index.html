@@ -26,7 +26,8 @@
 </head>
 
 <body>
-<h1>example code for week 3</h1>
+<h1>CODE 2</h1>
+<h2>example code for week 3</h2>
 
 	<div id="container">
 		<h3><a href="./01-js-objects/index.html">Javascript-style objects with P5.js</a></h3>
@@ -37,23 +38,30 @@
 		<p>Same basic idea as above, now with a lifespan that affects the transparency of each bubble.</p>
 		<h3><a href="./03-js-objects-collision/index.html">Detecting object-to-object overlap</a></h3>
 		<p>Bubble objects now detect collision by having each Bubble loop through the entire Bubble array and check for distance. If the distance is less than their combined radii, the fill changes to a random color.</p>
+		<p>Press the mouse to turn off the displays of the ellipses, instead only seeing a line drawn between colliding ellipses.</p>
 		<h3><a href="./05-html-basics/index.html">HTML and DOM via P5.js basics</a></h3>
 		<p>This sketch plays with a bunch of DOM elements. The first one is an h2 header element that is assigned to var h2. That h2 element's position is modified by clicking the mouse- changing both the text with h2.html() and changing the absolute position with h2.position.</p>
 		<p>This sketch also uses a double-nested loop to create 100 buttons with line breaks splitting up each row, and sets the canvas position to absolute at 0,0. Pressing the mouse button also appends a new paragraph element to the page.
 		<h3><a href="./06-DOM-css/index.html">Setting CSS style via P5.js</a></h3>
 		<p>This sketch first creates a paragraph element, then gives that paragraph a number of style attributes; changing the background color to green, the font family to sans-serif, the font size to 18px, and the color to black.</p>
 		<p>Next a button is created that when pressed calls the "changeStyle()" function, changing the styling of that text element, via an event handler. When the mouse hovers over that element however, it calls "revertStyle()" and changes back.</p>
-		<h3><a href="./07-DOM-callbacks/index.html">7</a></h3>
-		<h3><a href="./08-changed-input/index.html">8</a></h3>
-		<h3><a href="./09-dynamic-CSS/index.html">9</a></h3>
-		<h3><a href="./10-drag-drop/index.html">10</a></h3>
-		<h3><a href="./11-parent-child/index.html">11</a></h3>
-		<h3><a href="./12-dynamic-DOM-control/index.html">12</a></h3>
-		<h3><a href="./13-OOP-plus-DOM/index.html">13</a></h3>
-		<h3><a href="./14-load-file-button/index.html">14</a></h3>
+		<h3><a href="./08-changed-input/index.html">Sliders, Text Box, input callbacks</a></h3>
+		<p>This sketch sets up a paragraph element, a text box, and a slider. When Enter is pushed in the textbox, a callback updates the paragraph element with the entered text. When the slider is changed, the callback to updateSize changes the text size.</p>
+		<h3><a href="./07-DOM-callbacks/index.html">More DOM Callbacks</a></h3>
+		<p>Create a button html element with a callback to changeColor() - this means that when pressed, the button changes the background color of the canvas. There is also an Input element that changes the text of a Paragraph element, and a callback to the element that also changes the text based on if the mouse is over it or not.</p>
+		<h3><a href="./09-dynamic-CSS/index.html">Dynamic CSS via class changes</a></h3>
+		<p>This sketch uses a loop to create absolute-positioned paragraph elements containing the text "apples" with a ID of "apple", and another loop for "orange" with an ID of "orange". Each of the orange elements has a callback to orangeBecomeApple(), which changes the class from orange to apple. The CSS making the background color is defined in the style element in the index.html. There is also a loop setting up an anchor (link) tag labeled "not apples anchor", which when pressed calls becomeApple().</p>
+<!-- 		<h3><a href="./10-drag-drop/index.html">10</a></h3> -->
+		<h3><a href="./11-parent-child/index.html">Parent and Child Elements</a></h3>
+		<p>This sketch demonstrates use of using parent() and child() to set DOM hierarchy with dynamically created HTML elements. For example, the canvas is created to be a child of a paragraph element written out in the index.html.</p>
+		<h3><a href="./12-dynamic-DOM-control/index.html">Dynamic DOM Control</a></h3>
+		<p>This sketch demonstrates dynamic control of DOM elements - controlling a range of HTML sliders just via the p5 javascript.
+		<h3><a href="./13-OOP-plus-DOM/index.html">OOP style DOM control</a></h3>
+		<p>This sketch uses an HTML element as a 'bouncing ball', moving them around the entire page and registering callbacks to change attributes of the page. Notice that there is no Canvas being created by p5.js in this instance, by calling noCanvas() in setup().
+<!-- 		<h3><a href="./14-load-file-button/index.html">14</a></h3>
 		<h3><a href="./15-loadstrings/index.html">15</a></h3>
 		<h3><a href="./16-string-input/index.html">16</a></h3>
-		<h3><a href="./17-OOP-text-generation/index.html">17</a></h3>
+		<h3><a href="./17-OOP-text-generation/index.html">17</a></h3> -->
 
 	</div>
 
