@@ -4,10 +4,22 @@
 <style>
 	body {
 		margin: 20px;
+		font-family: sans-serif;
+	}
+
+	p {
+		line-height: 1.5em;
+	}
+
+	a {
+		color: red;
+		/*text-decoration: none;*/
 	}
 
 	#container {
 		width: 600px;
+		padding: 2px 10px;
+		background-color: lightgrey;
 	}
 </style>
 
@@ -18,13 +30,19 @@
 
 	<div id="container">
 		<h3><a href="./01-js-objects/index.html">Javascript-style objects with P5.js</a></h3>
-		<p>This sketch creates a "Bubble" object with display(), move(), and clicked() functions. The code creates an array to hold them, pushing instances of the object into the array whenever the mouse is clicked. Note that we can just use a regular old array to have a dynamic size - we don't need to say explicitly how big it is like we do in Processing/Java. We can add objects to the array as we like. The draw function loops through the array and draws and moves each one. Finally if the array is over 50 positions large, we remove the object in the first position in the array with the "splice()" function.</p>
+		<p>This sketch creates a "Bubble" object with display(), move(), and clicked() functions. The code creates an array to hold them, pushing instances of the object into the array whenever the mouse is clicked.</p>
+		<p>Note that we can just use a regular old array to have a dynamic size - we don't need to say explicitly how big it is like we do in Processing/Java. We can add objects to the array as we like.</p> 
+		<p>The draw function loops through the array and draws and moves each one. Finally if the array is over 50 positions large, we remove the object in the first position in the array with the "splice()" function.</p>
 		<h3><a href="./02-js-objects-2/index.html">Javascript-style objects with P5.js part 2</a></h3>
-		<p></p>
-		<h3><a href="./03-js-objects-collision/index.html">3</a></h3>
-		<h3><a href="./04-objects-images/index.html">4</a></h3>
-		<h3><a href="./05-html-basics/index.html">5</a></h3>
-		<h3><a href="./06-DOM-css/index.html">6</a></h3>
+		<p>Same basic idea as above, now with a lifespan that affects the transparency of each bubble.</p>
+		<h3><a href="./03-js-objects-collision/index.html">Detecting object-to-object overlap</a></h3>
+		<p>Bubble objects now detect collision by having each Bubble loop through the entire Bubble array and check for distance. If the distance is less than their combined radii, the fill changes to a random color.</p>
+		<h3><a href="./05-html-basics/index.html">HTML and DOM via P5.js basics</a></h3>
+		<p>This sketch plays with a bunch of DOM elements. The first one is an h2 header element that is assigned to var h2. That h2 element's position is modified by clicking the mouse- changing both the text with h2.html() and changing the absolute position with h2.position.</p>
+		<p>This sketch also uses a double-nested loop to create 100 buttons with line breaks splitting up each row, and sets the canvas position to absolute at 0,0. Pressing the mouse button also appends a new paragraph element to the page.
+		<h3><a href="./06-DOM-css/index.html">Setting CSS style via P5.js</a></h3>
+		<p>This sketch first creates a paragraph element, then gives that paragraph a number of style attributes; changing the background color to green, the font family to sans-serif, the font size to 18px, and the color to black.</p>
+		<p>Next a button is created that when pressed calls the "changeStyle()" function, changing the styling of that text element, via an event handler. When the mouse hovers over that element however, it calls "revertStyle()" and changes back.</p>
 		<h3><a href="./07-DOM-callbacks/index.html">7</a></h3>
 		<h3><a href="./08-changed-input/index.html">8</a></h3>
 		<h3><a href="./09-dynamic-CSS/index.html">9</a></h3>
