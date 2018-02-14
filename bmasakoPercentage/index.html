@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>% BMASAKO</title>
+    <meta name="viewport" width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0>
+    <style> 
+
+      body {
+        background: white; 
+        padding: 20px;
+        font-family: sans-serif;
+      }
+      
+      #textDiv {
+        text-align: center;
+      }
+
+      #resultDiv {
+        text-align: center;
+      }
+
+      input {
+        width: 4em;
+        font-size: 24pt;
+        font-family: sans-serif;
+      }
+
+    	#canvasDiv {
+    		padding: 0; 
+    		margin: 10px; 
+    		display: flex;
+    		justify-content: center;
+    		align-items: center;
+  		} 
+
+		</style>
+    <script src="p5.min.js"></script>
+    <script src="p5.dom.min.js"></script>
+    <script src="p5.sound.min.js"></script>
+    <script src="p5.play.js"></script>
+    <script src="sketch.js"></script>
+  </head>
+  <body>
+    <div id='textDiv'>
+      <h1>Bryan goes to Place A 
+        <input type="number" min="1" value="5" id="b1"> times in <input type="number" value="7" id="b2"> days</h1>
+      <h1>Asako goes to the same place <input type="number" min="1" value="1" id="a1"> times in <input type="number" min="1" value="10" width="10" id="a2"> days</h1>
+      <h1>What's the probability that they will meet?</h1>
+      <button>Calculate...</button>
+    </div>
+
+    <div id='canvasDiv'></div>
+
+    <div id='resultDiv'><h1 id='result'></h1></div>
+  </body>
+</html>
