@@ -195,44 +195,44 @@ function draw() {
 		// camera.zoom = sin(frameCount * 0.01) * 0.01;
 		// camera.zoom = 1 + sin(frameCount * 0.01);
 
-		if ((frameCount + 0) % 6 === 0) {
+		if ((frameCount + 0) % 5 === 0) {
 			particles.push(new Particle(0, 
 				camera.position.x + cos(frameCount * 0.1) * (200 + sin(frameCount * 0.005) * 100), 
 				camera.position.y + sin(frameCount * 0.1) * (200 + sin(frameCount * 0.005) * 100)));		
 		}
-		if ((frameCount + 1) % 6 === 0) {
+		if ((frameCount + 1) % 5 === 0) {
 			particles.push(new Particle(1, 
 				camera.position.x + cos(frameCount * 0.1 + 45) * (200 + sin(45 + frameCount * 0.005) * 100), 
 				camera.position.y + sin(frameCount * 0.1 + 45) * (200 + sin(45 + frameCount * 0.005) * 100)));		
 		}  
-		if ((frameCount + 2) % 6 === 0) {
+		if ((frameCount + 2) % 5 === 0) {
 			particles.push(new Particle(2, 
 				camera.position.x + cos(frameCount * 0.1 + 90) * (200 + sin(90 + frameCount * 0.005) * 100), 
 				camera.position.y + sin(frameCount * 0.1 + 90) * (200 + sin(90 + frameCount * 0.005) * 100)));		
 		}  
 
-		if ((frameCount + 3) % 6 === 0) {
+		if ((frameCount + 3) % 5 === 0) {
 			particles.push(new Particle(3, 
 				camera.position.x + cos(frameCount * 0.1) * (200 + sin(135 + frameCount * 0.005) * 100), 
 				camera.position.y + sin(frameCount * 0.1) * (200 + sin(135 + frameCount * 0.005) * 100)));		
 		}
-		if ((frameCount + 4) % 6 === 0) {
+		if ((frameCount + 4) % 5 === 0) {
 			particles.push(new Particle(4, 
 				camera.position.x + cos(frameCount * 0.1 + 45) * (200 + sin(180 + frameCount * 0.005) * 100), 
 				camera.position.y + sin(frameCount * 0.1 + 45) * (200 + sin(180 + frameCount * 0.005) * 100)));		
 		}  
-		if ((frameCount + 5) % 6 === 0) {
+		if ((frameCount + 5) % 5 === 0) {
 			particles.push(new Particle(5, 
 				camera.position.x + cos(frameCount * 0.1 + 90) * (200 + sin(225 + frameCount * 0.005) * 100), 
 				camera.position.y + sin(frameCount * 0.1 + 90) * (200 + sin(225 + frameCount * 0.005) * 100)));		
 		}  
 
-		if ((frameCount + 6) % 6 === 0) {
+		if ((frameCount + 6) % 5 === 0) {
 			particles.push(new Particle(6, 
 				camera.position.x + cos(frameCount * 0.1 + 25) * (200 + sin(270 + frameCount * 0.005) * 100), 
 				camera.position.y + sin(frameCount * 0.1 + 25) * (200 + sin(270 + frameCount * 0.005) * 100)));		
 		}  
-		if ((frameCount + 7) % 6 === 0) {
+		if ((frameCount + 7) % 5 === 0) {
 			particles.push(new Particle(7, 
 				camera.position.x + cos(frameCount * 0.1 + 50) * (200 + sin(315 + frameCount * 0.005) * 100), 
 				camera.position.y + sin(frameCount * 0.1 + 50) * (200 + sin(315 + frameCount * 0.005) * 100)));		
