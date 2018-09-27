@@ -92,6 +92,7 @@ void draw() {
 ![1](https://raw.githubusercontent.com/whoisbma/whoisbma.github.io/master/Code1/img/1.gif "1")
 
 ### design errors - grid 
+
 ```
 // this is currently drawing an angled line of rectangles - it should draw a centered grid of squares.
 
@@ -110,6 +111,7 @@ void draw() {
 ![2](https://raw.githubusercontent.com/whoisbma/whoisbma.github.io/master/Code1/img/2.png "2")
 
 ### design errors - button
+
 ```
 // pressing the button should change the background color. figure out why it doesn't and fix it
 
@@ -140,3 +142,54 @@ void draw() {
 ```
 
 ![3](https://raw.githubusercontent.com/whoisbma/whoisbma.github.io/master/Code1/img/3.gif "3")
+
+### design errors - clock 
+
+```
+// map() the values properly so that the clock hands are displayed at the correct angle
+
+int seconds;
+int minutes;
+int hours;
+
+void setup() {
+  size(400,400);
+}
+
+void draw() {
+  background(255);
+  
+  fill(220);
+  noStroke();
+  ellipse(width/2, height/2, 230, 230);
+  
+  // these are the values that need mapping
+  seconds = second();
+  minutes = minute();
+  hours = hour();
+   
+  stroke(0);
+  pushMatrix();
+  translate(width/2, height/2);
+  rotate(radians(seconds));
+  strokeWeight(1);
+  line(0, 0, 0, -100);
+  popMatrix();
+  
+  pushMatrix();
+  translate(width/2, height/2);
+  rotate(radians(minutes));
+  strokeWeight(2);
+  line(0, 0, 0, -80);
+  popMatrix();
+  
+  pushMatrix();
+  translate(width/2, height/2);
+  rotate(radians(hours));
+  strokeWeight(3);
+  line(0, 0, 0, -60);
+  popMatrix();
+}
+```
+
+![4](https://raw.githubusercontent.com/whoisbma/whoisbma.github.io/master/Code1/img/4.gif "4")
