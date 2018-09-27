@@ -89,3 +89,4 @@ void draw() {
 }
 ```
 
+![1](whoisbma.github.io/Code1/gifs/1.gif "1")
