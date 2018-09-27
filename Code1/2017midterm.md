@@ -108,3 +108,35 @@ void draw() {
 }
 ```
 ![2](https://raw.githubusercontent.com/whoisbma/whoisbma.github.io/master/Code1/img/2.png "2")
+
+### design errors - button
+```
+// pressing the button should change the background color. figure out why it doesn't and fix it
+
+int buttonX = 100;
+int buttonY = 100;
+int buttonW = 100;
+int buttonH = 100;
+
+void setup() {
+  size(300, 300);
+}
+
+void draw() {
+  background(40);
+
+  if (mousePressed) {
+    if (mouseX < buttonX && mouseX > buttonW) {
+      if (mouseY < buttonY && mouseY > buttonH) {
+        background(255);
+      }
+    }
+  }
+  
+    
+  rect(buttonX, buttonY, buttonW, buttonH);
+
+}
+```
+
+![3](https://raw.githubusercontent.com/whoisbma/whoisbma.github.io/master/Code1/img/3.gif "3")
