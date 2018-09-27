@@ -193,3 +193,122 @@ void draw() {
 ```
 
 ![4](https://raw.githubusercontent.com/whoisbma/whoisbma.github.io/master/Code1/img/4.gif "4")
+
+
+### design errors - overflow
+
+```
+// currently this sketch has an array of Walker type objects that get instantiated individually when the mouse is pressed.
+// because the array is of limited length, eventually it overflows if the mouse button is pushed long enough.
+// fix the code to make sure that the overflow doesn't happen. 
+// you could do this via logic with the walker counter, or using an ArrayList instead of an array.
+
+Walker[] walkers = new Walker[100];
+
+int whichWalker = 0;
+
+void setup() {
+  size(600,600);
+  background(255);
+}
+
+void draw() {
+  for (int i = 0; i < whichWalker; i++) {
+    walkers[i].update();
+    walkers[i].display();
+  }
+
+  if (mousePressed) {
+    walkers[whichWalker] = new Walker(mouseX, mouseY);
+    whichWalker++;
+  }
+}
+
+
+class Walker {
+  float x;
+  float y;
+  float moveSpeed;
+  float alphaColor;
+
+  Walker(float _x, float _y) {
+    x = _x;
+    y = _y;
+    moveSpeed = random(5);
+    alphaColor = 255;
+  }
+  
+  void update() {
+    alphaColor -= 0.1;
+    int r = int(random(4));
+    switch (r) {
+      case 0:
+        x += moveSpeed;
+        break;
+      case 1:
+        x -= moveSpeed;
+        break;
+      case 2:
+        y += moveSpeed;
+        break;
+      case 3:
+        y -= moveSpeed;
+        break;
+      default:
+        break;
+    }
+  }
+  
+  void display() {
+    stroke(0, alphaColor);
+    point(x,y);
+  }
+}
+```
+
+![5](https://raw.githubusercontent.com/whoisbma/whoisbma.github.io/master/Code1/img/5.gif "5")
+
+### design errors - modulo
+
+```
+// this code uses the modulo in a clever way to create a loop that you might ordinarily use an if statement to handle.
+// fix the code so it returns when reaching the width of the canvas.
+
+float position;
+
+void setup() {
+  size(600,600);
+}
+
+void draw() {
+  background(180);
+  ellipse(position, height/2, 100, 100);
+  
+  position = (position + 5) % 100;
+}
+```
+
+![5](https://raw.githubusercontent.com/whoisbma/whoisbma.github.io/master/Code1/img/4.gif "5")
+
+### putting it all together - pong
+
+```
+// put together a skeleton Pong game.
+
+// create a bouncing ball that starts in the middle of the screen 
+// either use a class or independent variables, it doesn't matter
+// make it bounce only on the top and bottom walls
+// create two paddles. this can also be a class or not
+// have key presses control the up and down movement of the paddles independently
+// make the ball reverse x direction when it touches the paddles
+// return the ball to the middle of the screen with a random position when it goes off screen
+// keep score for the two players
+
+void setup() {
+  
+}
+
+void draw() {
+  
+}
+```
