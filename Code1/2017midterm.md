@@ -60,7 +60,7 @@ void setup() {
 }
 ```
 
-### design errors
+### design errors - mouse trail
 
 ```
 // Make the lines follow the mouse as a trail behind the mouse position correctly
@@ -89,4 +89,22 @@ void draw() {
 }
 ```
 
-![1](https://raw.githubusercontent.com/whoisbma/whoisbma.github.io/master/Code1/gifs/1.gif "1")
+![1](https://raw.githubusercontent.com/whoisbma/whoisbma.github.io/master/Code1/img/1.gif "1")
+
+### design errors - grid 
+```
+// this is currently drawing an angled line of rectangles - it should draw a centered grid of squares.
+
+void setup() {
+  size(600, 600);
+}
+
+void draw() {
+  for (int i = 0; i < 10; i++) {
+    for (int j = 0; j < 10; j++) {
+      rect(i * 50, i * 25, 25, 25);
+    }
+  }
+}
+```
+![2](https://raw.githubusercontent.com/whoisbma/whoisbma.github.io/master/Code1/img/2.png "2")
