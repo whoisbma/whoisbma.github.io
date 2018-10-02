@@ -288,7 +288,7 @@ void draw() {
 }
 ```
 
-![5](https://raw.githubusercontent.com/whoisbma/whoisbma.github.io/master/Code1/img/4.gif "5")
+![6](https://raw.githubusercontent.com/whoisbma/whoisbma.github.io/master/Code1/img/6.gif "6")
 
 ### putting it all together - pong
 
