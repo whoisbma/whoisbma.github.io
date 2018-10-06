@@ -450,3 +450,80 @@ void draw() {
 
 }
 ```
+
+**arrays1**
+
+this sketch uses a single array of floats to store values used in a drawing function. change the sketch so that it instantiates an array of 100 ellipses instead. you will need to change the way the values are given to the array. map the values in the array so that when drawn, the ellipses will be evenly spaced moving down the screen from the top to the bottom.
+
+![](https://raw.githubusercontent.com/whoisbma/whoisbma.github.io/master/Code1/img/arrays1.png "") 
+
+```
+float[] pos = { 100, 200, 300, 400, 500 };
+
+void setup() {
+  size(600, 600);
+}
+
+void draw() {
+  background(240);
+  for (int i = 0; i < pos.length; i++) {
+    ellipse(width/2, pos[i], 50, 50);
+  }
+}
+```
+
+**arrays2**
+
+this array creates two arrays of floats but with no size, and with no effect in the draw loop. fix the sketch so that the arrays have some size and values, and are then used to draw something to the screen in the draw loop. finally, add behavior that changes the value of each float in the loop every frame. try to add more arrays (for colors, angles, etc) if there is behavior that you want to change that doesn't involve positions.
+
+![](https://raw.githubusercontent.com/whoisbma/whoisbma.github.io/master/Code1/img/arrays2.gif "") 
+
+```
+float[] xPositions;
+float[] yPositions;
+
+void setup() {
+  size(600, 600);
+  background(100);
+  for (int i = 0; i < xPositions.length; i++) {
+    xPositions[i] = 0;
+    yPositions[i] = 0;
+  }
+}
+
+void draw() {
+  
+}
+
+```
+
+**arrays3**
+
+this sketch uses a 2d array to store colors that will be used to draw rectangles in a grid. change the draw loop so that it draws evenly spaced rectangles across the screen, and add a conditional to make sure that once a color turns white, it returns back to black as seen in the example gif. 
+
+![](https://raw.githubusercontent.com/whoisbma/whoisbma.github.io/master/Code1/img/arrays3.gif "") 
+
+```
+int gridW = 10;
+int gridH = 10;
+float[][] greyColors = new float[gridW][gridH];
+
+void setup() {
+  size(600, 600);
+  for (int i = 0; i < gridW; i++) {
+    for (int j = 0; j < gridH; j++) {
+      greyColors[i][j] = map(j * gridW + i, 0, gridW * gridH, 0, 255);
+    }
+  }
+}
+
+void draw() {
+  for (int i = 0; i < gridW; i++) {
+    for (int j = 0; j < gridH; j++) {
+      greyColors[i][j]+=1;
+      fill(greyColors[i][j]);
+      rect(0, 0, width/gridW, height/gridH);
+    }
+  }
+}
+```
