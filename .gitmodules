@@ -1,3 +1,6 @@
 [submodule "Code_2_SP18"]
 	path = Code_2_SP18
 	url = https://github.com/whoisbma/Code_2_SP18.git
+[submodule "raw-webgl-test"]
+	path = raw-webgl-test
+	url = https://github.com/whoisbma/raw-webgl-test
