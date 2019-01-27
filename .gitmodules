@@ -4,6 +4,3 @@
 [submodule "raw-webgl-test"]
 	path = raw-webgl-test
 	url = https://github.com/whoisbma/raw-webgl-test
-[submodule "ggj19"]
-	path = ggj19
-	url = https://github.com/whoisbma/ggj19.git
